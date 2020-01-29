@@ -1,0 +1,16 @@
+
+---
+spring:
+  profiles: dev
+my:
+   servers:
+       - aaa-default.bar.com
+       - bbb-default.bar.com
+
+---
+spring:
+  profiles: production
+my:
+   servers:
+       - aaa-production.bar.com
+       - bbb-production.bar.com

@@ -1,0 +1,52 @@
+{
+    "receiver": "webhook-alert",
+    "status": "firing",
+    "alerts": [
+        {
+            "status": "firing",
+            "labels": {
+                "alertname": "High Memory Usage of Container",
+                "container_name": "broker",
+                "namespace": "default",
+                "pod_name": "kafka-0",
+                "team": "dev"
+            },
+            "annotations": {
+                "summary": "Container named  in  in default is using more than 75% of Memory Limit"
+            },
+            "startsAt": "2020-01-21T09:25:10.878939472Z",
+            "endsAt": "0001-01-01T00:00:00Z",
+            "generatorURL": "http://prometheus-deployment-5f6fb569f5-pft2j:9090/graph?g0.expr=%28%28%28sum+by%28namespace%2C+container_name%2C+pod_name%29+%28container_memory_usage_bytes%7Bcontainer_name%21%3D%22POD%22%2Cimage%21%3D%22%22%2Cnamespace%21%3D%22kube-system%22%7D%29+%2F+sum+by%28namespace%2C+container_name%2C+pod_name%29+%28container_spec_memory_limit_bytes%7Bcontainer_name%21%3D%22POD%22%2Cimage%21%3D%22%22%2Cnamespace%21%3D%22kube-system%22%7D%29%29+%2A+100%29+%3C+%2BInf%29+%3E+75&g0.tab=1"
+        },
+        {
+            "status": "firing",
+            "labels": {
+                "alertname": "High Memory Usage of Container",
+                "container_name": "zookeeper",
+                "namespace": "default",
+                "pod_name": "zookeeper-0",
+                "team": "dev"
+            },
+            "annotations": {
+                "summary": "Container named  in  in default is using more than 75% of Memory Limit"
+            },
+            "startsAt": "2020-01-21T09:25:10.878939472Z",
+            "endsAt": "0001-01-01T00:00:00Z",
+            "generatorURL": "http://prometheus-deployment-5f6fb569f5-pft2j:9090/graph?g0.expr=%28%28%28sum+by%28namespace%2C+container_name%2C+pod_name%29+%28container_memory_usage_bytes%7Bcontainer_name%21%3D%22POD%22%2Cimage%21%3D%22%22%2Cnamespace%21%3D%22kube-system%22%7D%29+%2F+sum+by%28namespace%2C+container_name%2C+pod_name%29+%28container_spec_memory_limit_bytes%7Bcontainer_name%21%3D%22POD%22%2Cimage%21%3D%22%22%2Cnamespace%21%3D%22kube-system%22%7D%29%29+%2A+100%29+%3C+%2BInf%29+%3E+75&g0.tab=1"
+        }
+    ],
+    "groupLabels": {
+        "alertname": "High Memory Usage of Container"
+    },
+    "commonLabels": {
+        "alertname": "High Memory Usage of Container",
+        "namespace": "default",
+        "team": "dev"
+    },
+    "commonAnnotations": {
+        "summary": "Container named  in  in default is using more than 75% of Memory Limit"
+    },
+    "externalURL": "http://prometheus.plab-mini.skplanet.com",
+    "version": "4",
+    "groupKey": "{}:{alertname=\"High Memory Usage of Container\"}"
+}

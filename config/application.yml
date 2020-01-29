@@ -1,0 +1,24 @@
+server:
+  port: 8080
+logging:
+  config: classpath:logback.xml
+application:
+  alertmanager:
+    webhook:
+      notificationId: default
+  email:
+    host: smtp.gmail.com
+    port: 587
+    auth: true
+    username: abcd@gmail.com
+    password: zgtgfteyivkzrsdf
+  slack:
+    url: https://hooks.slack.com/services/
+  sms:
+    webhook:
+      url: http://100.100.100.100/send?phoneNum={{ .sms }}&msg={{ .message }}&callbackNum=01050078766
+      method: GET
+      bodyPath: config/webhook.tmpl
+  proxy:
+    use: false
+    url: http://172.22.134.22

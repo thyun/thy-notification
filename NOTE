@@ -1,0 +1,83 @@
+# TODO
+1) API 기능
+- page /notifications - 상단 header 아래 line color, 하단 company name 등
+- 1건이라도 fail이면 NotifyResponse fail로 설정 (slack의 경우 여러 건 중 일부만 성공 가능)
+- send retry?
+- mysql -> h2 변경
+
+2) 추후
+- NotifyRequest -> Map으로 변경? (JsonHelper.getExpValue() 사용하기 위해)
+- message에 generatorURL link 추가 기능
+- sms sender - through post webhook
+- telegram, line, kakao sender?
+- /v1/notify status, stats?
+- send by async
+- defferred result?
+- templates/users/new-user.html - form input font-size .875rem 설정이 안됨
+
+# DONE
+- config - notificationId 값 expression으로 설정 (ex) 'team:{{ .commonLabels.team }}'
+- prometheus alertmanager webhook 처리 - notificationId 처리
+- notification crud 기능. api 요청시 notification target과 merge하여 전송하는 기능
+- sms through get webhook
+- email sender
+- notifyInternal 호출시 Exception 발생하면 처리가 중단되고 아래와 같은 response 응답 (http post시 java.net.SocketTimeoutException 발생 경우)
+{"timestamp":"2020-01-10T08:55:19.686+0000","status":500,"error":"Internal Server Error","message":"I/O error on POST request for \"https://hooks.slack.com/services/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\": connect timed out; nested exception is java.net.SocketTimeoutException: connect timed out","path":"/v1/notify"}
+- Swagger 적용
+  * https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api
+  * 접근: /swagger-ui.html
+- Spring Boot form validation, Validation 실패시 입력값 유지
+- Spring Boot REST + Test Controller
+  * https://www.baeldung.com/building-a-restful-web-service-with-spring-and-java-based-configuration
+  * https://spring.io/guides/gs/rest-service/
+- Spring Data JPA CRUD
+  * https://www.baeldung.com/spring-boot-crud-thymeleaf
+- Thymeleaf layout 적용
+  * https://dzone.com/articles/spring-boot-thymeleaf-template-decorator-using-thy
+  * https://github.com/sanaulla123/samples/tree/master/thymeleaf-layout-dialect-boot
+  * default layout: templates/layouts/layout.html 
+  * example layout: templates/layouts/example.html
+- MySQL 적용
+  * https://spring.io/guides/gs/accessing-data-mysql/
+  * application.properties 사용 - application.properties 내용을 application.yml에 기록하여 사용하면 mysql table 생성 안됨
+- schema.sql, data.sql
+  * https://www.baeldung.com/spring-boot-data-sql-and-schema-sql
+- User 페이지 디자인
+
+# API
+Request:
+{
+    "id": "send-0001",
+    "title": "제목",
+    "message": "[ON] SMONi-ap-dev03 [Memory used] 6685151232 > 15 [1 MIN PMon #56]",
+    "email": [ "th.yun@sk.com" ],
+    "slack": [
+        { "channelKey": "T0NCP1206/B1YFAFY1Y/7dVfupdbAqdmdkvI1ASiXNvT" }
+    ],
+    "telegram": [ ],
+    "line": [ ],
+    "sms": [ "01039084148", "0264074148" ]
+}
+
+Response:
+{
+    "id": "send-0001",
+    "result": true,
+    "email": [
+        {
+            "id": "send-0001",
+            "result": true
+        }
+    ],
+    "slack": [
+        {
+            "id": "send-0001",
+            "result": true
+        }
+    ]
+}
+
+# Reference
+https://dzone.com/articles/spring-boot-thymeleaf-template-decorator-using-thy
+https://github.com/sanaulla123/samples/tree/master/thymeleaf-layout-dialect-boot
+Bootstrap examples: album, starter-template, dashboard
