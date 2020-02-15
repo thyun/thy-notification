@@ -1,5 +1,7 @@
 package com.skp.abtest.sample.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +13,7 @@ import java.util.regex.Pattern;
 
 public class JsonHelper {
 	private static final Logger logger = LoggerFactory.getLogger(JsonHelper.class);
+	static ObjectMapper objectMapper = new ObjectMapper();
 
 	static String REGEX = "\\{\\{ (.*?) \\}\\}";
 	public static String getExpValue(Map map, String exp) {
@@ -35,18 +38,18 @@ public class JsonHelper {
 			String tokens[] = rpath.split("\\.");
 			List<String> tokensList = Arrays.asList(tokens);
 			if ("".equals(tokensList.get(0)))
-				return getTokenValue(map, tokensList.subList(1, tokensList.size()));
-			return getTokenValue(map, tokensList);
+				return getPathValue(map, tokensList.subList(1, tokensList.size()));
+			return getPathValue(map, tokensList);
 		}
 		return path;
 	}
 
-	private static String getTokenValue(Map map, List<String> tokensList) {
+	private static String getPathValue(Map map, List<String> tokensList) {
 		if (tokensList.size() == 1)
 			return (String) map.get(tokensList.get(0));
 		String token = tokensList.get(0);;
 		Map nmap = (Map) map.get(token);
-		return getTokenValue(nmap, tokensList.subList(1, tokensList.size()));
+		return getPathValue(nmap, tokensList.subList(1, tokensList.size()));
 	}
 
 	public static String strip(String path, String pre, String post) {
@@ -54,5 +57,14 @@ public class JsonHelper {
 		int end = path.indexOf(post);
 		return path.substring(start, end).trim();
     }
+
+    public static String writeValue(Object object) {
+		try {
+			return objectMapper.writeValueAsString(object);
+		} catch (JsonProcessingException e) {
+			logger.error(e.toString());
+		}
+		return "{ }";
+	}
 
 }

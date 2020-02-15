@@ -23,24 +23,24 @@
       </div>
     </div>
     <div class="form-group row">
-      <label for="email" class="col-sm-2 col-form-label">Email</label>
+      <label for="phone" class="col-sm-2 col-form-label">Phones</label>
+      <div class="col-sm-10">
+        <input type="text" th:field="*{phone}" class="form-control" id="phone" placeholder="Phone number list">
+        <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="text-danger"></span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="email" class="col-sm-2 col-form-label">Emails</label>
       <div class="col-sm-10">
         <input type="text" th:field="*{email}" class="form-control" id="email" placeholder="Email address list">
         <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
       </div>
     </div>
     <div class="form-group row">
-      <label for="slack" class="col-sm-2 col-form-label">Slack</label>
+      <label for="slack" class="col-sm-2 col-form-label">Slack webhook</label>
       <div class="col-sm-10">
-        <input type="text" th:field="*{slack}" class="form-control" id="slack" placeholder="Slack webhook list">
+        <input type="text" th:field="*{slack}" class="form-control" id="slack" placeholder="Slack webhook">
         <span th:if="${#fields.hasErrors('slack')}" th:errors="*{slack}" class="text-danger"></span>
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="sms" class="col-sm-2 col-form-label">SMS</label>
-      <div class="col-sm-10">
-        <input type="text" th:field="*{sms}" class="form-control" id="sms" placeholder="Phone number list">
-        <span th:if="${#fields.hasErrors('sms')}" th:errors="*{sms}" class="text-danger"></span>
       </div>
     </div>
     <div class="form-group row">

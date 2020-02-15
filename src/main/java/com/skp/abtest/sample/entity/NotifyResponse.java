@@ -2,7 +2,9 @@ package com.skp.abtest.sample.entity;
 
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class NotifyResponse {
@@ -13,5 +15,5 @@ public class NotifyResponse {
 
     List<SenderResponse> email;
     List<SenderResponse> slack;
-    List<SenderResponse> sms;
+    List<SenderResponse> webhook;
 }

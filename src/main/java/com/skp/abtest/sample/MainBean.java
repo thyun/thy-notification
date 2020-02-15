@@ -30,12 +30,9 @@ public class MainBean {
     }
 
     @Bean
-    SmsSender smsSender(@Value("${application.sms.webhook.url}") String url,
-                        @Value("${application.sms.webhook.method}") String method,
-                        @Value("${application.sms.webhook.bodyPath}") String bodyPath) {
-        SmsSender smsSender = new SmsSender();
-        smsSender.init(url, method, bodyPath);
-        return smsSender;
+    WebhookSender webhookSender() {
+        WebhookSender webhookSender = new WebhookSender();
+        return webhookSender;
     }
 
     @Bean

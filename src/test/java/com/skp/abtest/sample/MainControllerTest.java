@@ -40,7 +40,7 @@ public class MainControllerTest {
     public void testNotificationRepository() throws Exception {
         Notification n = new Notification();
         n.setId("default");
-        n.setSms("01010001000 01010001001 01010001002");
+        n.setPhone("01010001000 01010001001 01010001002");
         notificationRepository.save(n);
     }
 

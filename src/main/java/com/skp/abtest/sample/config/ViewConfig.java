@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ViewConfiguration {
+public class ViewConfig {
 
   @Bean
   public LayoutDialect layoutDialect() {

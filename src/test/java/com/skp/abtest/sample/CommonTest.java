@@ -2,14 +2,11 @@ package com.skp.abtest.sample;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skp.abtest.sample.entity.Notification;
-import com.skp.abtest.sample.entity.NotifyRequest;
 import com.skp.abtest.sample.util.FileHelper;
 import com.skp.abtest.sample.util.JsonHelper;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.io.IOException;
 import java.util.*;
@@ -25,12 +22,12 @@ public class CommonTest {
     @Test
     public void testNotification() {
         Notification n = new Notification();
+        n.setPhone("01010001000 01010001001");
         n.setEmail("aaaa@aaaa.com bbbb@bbbb.com");
         n.setSlack("T0NCP1206/aaaa T0NCP1206/bbbb");
-        n.setSms("01010001000 01010001001");
+        logger.debug("phoneList={}", n.getPhoneList());
         logger.debug("emailList={}", n.getEmailList());
         logger.debug("slackList={}", n.getSlackList());
-        logger.debug("smsList={}", n.getSmsList());
 
         ArrayList<String> mergedList = new ArrayList<>();
         n.setEmail("");

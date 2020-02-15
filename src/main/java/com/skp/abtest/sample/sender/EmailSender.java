@@ -23,18 +23,19 @@ public class EmailSender {
     public List<SenderResponse> notify(NotifyRequest request) {
         ArrayList<SenderResponse> responseList = new ArrayList<>();
         String from = "no-reply@com";
-        String to = buildTo(request.getEmail());
+        String[] to = buildTo(request.getEmail());
 
         SenderResponse response = notifyInternal(request, from, to);
         responseList.add(response);
         return responseList;
     }
 
-    private String buildTo(List<String> emailList) {
-        return String.join(", ", emailList);
+    private String[] buildTo(List<String> emailList) {
+        return emailList.toArray(new String[0]);
+        //return String.join(", ", emailList);
     }
 
-    private SenderResponse notifyInternal(NotifyRequest request, String from, String to) {
+    private SenderResponse notifyInternal(NotifyRequest request, String from, String[] to) {
         SenderResponse response = new SenderResponse();
         response.setId(request.getId());
         response.setResult(true);
@@ -47,7 +48,7 @@ public class EmailSender {
         return response;
     }
 
-    private SimpleMailMessage buildMailMessage(String from, String to, String title, String message) {
+    private SimpleMailMessage buildMailMessage(String from, String[] to, String title, String message) {
         SimpleMailMessage msg = new SimpleMailMessage();
 //        msg.setFrom(from);
         msg.setTo(to);

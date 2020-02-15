@@ -18,8 +18,8 @@ public class SenderManager {
     NotificationRepository notificationRepository;
     @Autowired SlackSender slackSender;
     @Autowired EmailSender emailSender;
-    @Autowired SmsSender smsSender;
-    @Value("${application.alertmanager.webhook.notificationId}") String notificationId;
+    @Autowired WebhookSender webhookSender;
+    @Value("${application.alertmanager.notificationId}") String notificationId;
 
     // TODO partial success? result가 1개라도 fail이면 fail?
     public
@@ -38,8 +38,8 @@ public class SenderManager {
             response.setSlack(slackSender.notify(request));
         if (existEmail(request))
             response.setEmail(emailSender.notify(request));
-        if (existSms(request))
-            response.setSms(smsSender.notify(request));
+
+        response.setWebhook(webhookSender.notify(request));
 
         response.setId(request.getId());
         response.setResult(result);
@@ -49,7 +49,7 @@ public class SenderManager {
     private NotifyRequest mergeTarget(NotifyRequest request, Optional<Notification> notification) {
         request.getEmail().addAll(notification.get().getEmailList());
         request.getSlack().addAll(notification.get().getSlackList());
-        request.getSms().addAll(notification.get().getSmsList());
+        request.getPhones().addAll(notification.get().getPhoneList());
         return request;
     }
 
@@ -65,7 +65,7 @@ public class SenderManager {
     long webhookId = 1;
     public NotifyResponse notifyWebhook(Map webhook) {
         NotifyRequest request = new NotifyRequest();
-        request.setId(String.format("Webhook-%d", webhookId++));
+        request.setId(String.format("alertmanager-%d", webhookId++));
         request.setNotificationId(buildNotificationId(webhook, notificationId));
         request.setTitle("[Notification - AlertManager]");
         request.setMessage(buildWebhookMessage(webhook));
@@ -101,8 +101,8 @@ public class SenderManager {
         return false;
     }
 
-    private boolean existSms(NotifyRequest request) {
-        if (request.getSms() != null && request.getSms().size() > 0)
+    private boolean existPhone(NotifyRequest request) {
+        if (request.getPhones() != null && request.getPhones().size() > 0)
             return true;
         return false;
     }

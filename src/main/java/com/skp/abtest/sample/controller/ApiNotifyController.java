@@ -20,6 +20,11 @@ public class ApiNotifyController {
 	@Autowired
 	SenderManager senderManager;
 
+	/**
+	 * Process notify request
+	 * @param request
+	 * @return
+	 */
 	@PostMapping(value={ "/notify" }, consumes={ "application/json;charset=UTF-8" })
 	public ResponseEntity<NotifyResponse> notify(@RequestBody NotifyRequest request) {
 		logger.debug("notify() start: request={}", request);
@@ -27,6 +32,9 @@ public class ApiNotifyController {
 		return ResponseEntity.ok(response);
 	}
 
+	/**
+	 * Process alertmanager's webhook request
+	 */
 	@PostMapping(value={ "/webhook" }, consumes={ "application/json;charset=UTF-8" })
 	public ResponseEntity<NotifyResponse> alert(@RequestBody Map webhook) {
 		logger.debug("webhook() start: webhook={}", webhook);

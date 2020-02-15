@@ -4,8 +4,7 @@ logging:
   config: classpath:logback.xml
 application:
   alertmanager:
-    webhook:
-      notificationId: default
+    notificationId: team:{{ .commonLabels.team }}
   email:
     host: smtp.gmail.com
     port: 587
@@ -14,11 +13,7 @@ application:
     password: zgtgfteyivkzrsdf
   slack:
     url: https://hooks.slack.com/services/
-  sms:
-    webhook:
-      url: http://100.100.100.100/send?phoneNum={{ .sms }}&msg={{ .message }}&callbackNum=01050078766
-      method: GET
-      bodyPath: config/webhook.tmpl
+  webhook:
   proxy:
     use: false
     url: http://172.22.134.22

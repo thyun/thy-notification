@@ -11,9 +11,9 @@ public class NotifyRequest {
     String notificationId;
     String title;
     String message;
+    List<String> phones = new ArrayList<>();
     List<String> email = new ArrayList<>();
     List<SlackChannel> slack = new ArrayList<>();
     List<Object> telegram;
     List<Object> kakaotalk;
-    List<String> sms = new ArrayList<>();
 }
