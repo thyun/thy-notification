@@ -1,11 +1,11 @@
-# thy-target
-- Provides centralized target service for alarm or alert message.
+# thy-notification
+- Provides centralized notification service for alarm or alert message.
 - Provides UI to manage target addresses such as phone numbers (mobile), email addresses and slack webhook address, etc.
 - Supports prometheus alertmanager's webhook request.
 
 # How to run
-- Download release version and unzip the package
-- Change to the package home directory and run the following
+- Download thy-notification.tar.gz file from https://github.com/thyun/thy-notification/releases
+- Unzip the file, change to the home directory and run the following
   - java -jar thy-notification.jar
 - Access http://localhost:8080/ in your browser
 
@@ -25,19 +25,19 @@ Modify application.webhook configuration. The following example generates an out
 ```
   webhook:
     - name: sms
-      url: http://localhost:9000/send?phoneNum={{ .phone }}&msg={{ .message }}&callbackNum=01050078766
+      url: http://localhost:9000/send?phoneNum={{ .phone }}&msg={{ .message }}&callbackNum=01099999999
       method: GET
       body: ""
       format: delimiter
 ```
 
 ### 2) Register target addresses for your targetId
-- Access thy-target's targets page. (/targets)
+- Access thy-notifications's targets page. (/targets)
 - Register target addresses for each team.
 For example, if team name is devops you have to register a target using targetId value as team:devops
 
 # Test
-You can send prometheus alertmanager's webhook request to thy-target like below.
+You can send prometheus alertmanager's webhook request to thy-notification like below.
 Verify the message is send to all the target addresses.
 
 ```aidl
