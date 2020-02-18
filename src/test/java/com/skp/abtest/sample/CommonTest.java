@@ -1,7 +1,7 @@
 package com.skp.abtest.sample;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.skp.abtest.sample.entity.Notification;
+import com.skp.abtest.sample.entity.Target;
 import com.skp.abtest.sample.util.FileHelper;
 import com.skp.abtest.sample.util.JsonHelper;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class CommonTest {
 
     @Test
     public void testNotification() {
-        Notification n = new Notification();
+        Target n = new Target();
         n.setPhone("01010001000 01010001001");
         n.setEmail("aaaa@aaaa.com bbbb@bbbb.com");
         n.setSlack("T0NCP1206/aaaa T0NCP1206/bbbb");

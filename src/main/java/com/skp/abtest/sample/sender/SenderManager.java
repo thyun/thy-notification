@@ -15,11 +15,11 @@ public class SenderManager {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    NotificationRepository notificationRepository;
+    TargetRepository targetRepository;
     @Autowired SlackSender slackSender;
     @Autowired EmailSender emailSender;
     @Autowired WebhookSender webhookSender;
-    @Value("${application.alertmanager.notificationId}") String notificationId;
+    @Value("${application.alertmanager.targetId}") String targetId;
 
     // TODO partial success? result가 1개라도 fail이면 fail?
     public
@@ -28,7 +28,7 @@ public class SenderManager {
         boolean result = true;
 
         // Lookup notification
-        Optional<Notification> notification = notificationRepository.findById(request.getNotificationId());
+        Optional<Target> notification = targetRepository.findById(request.getTargetId());
         if (!notification.isPresent())
             return makeErrorResponse(request, "Notification id not found");
 
@@ -46,7 +46,7 @@ public class SenderManager {
         return response;
     }
 
-    private NotifyRequest mergeTarget(NotifyRequest request, Optional<Notification> notification) {
+    private NotifyRequest mergeTarget(NotifyRequest request, Optional<Target> notification) {
         request.getEmail().addAll(notification.get().getEmailList());
         request.getSlack().addAll(notification.get().getSlackList());
         request.getPhones().addAll(notification.get().getPhoneList());
@@ -66,14 +66,14 @@ public class SenderManager {
     public NotifyResponse notifyWebhook(Map webhook) {
         NotifyRequest request = new NotifyRequest();
         request.setId(String.format("alertmanager-%d", webhookId++));
-        request.setNotificationId(buildNotificationId(webhook, notificationId));
+        request.setTargetId(buildTargetId(webhook, targetId));
         request.setTitle("[Notification - AlertManager]");
         request.setMessage(buildWebhookMessage(webhook));
         return notify(request);
     }
 
-    private String buildNotificationId(Map webhook, String notificationId) {
-        return JsonHelper.getExpValue(webhook, notificationId);
+    private String buildTargetId(Map webhook, String targetId) {
+        return JsonHelper.getExpValue(webhook, targetId);
     }
 
     // 'Alert: {{ .CommonLabels.alertname }}. Summary:{{ .CommonAnnotations.summary }}. RawData: {{ .CommonLabels }}'

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Data
-public class Notification {
+public class Target {
     @Id
     private String id;
 

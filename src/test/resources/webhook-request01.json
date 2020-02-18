@@ -41,7 +41,7 @@
     "commonLabels": {
         "alertname": "High Memory Usage of Container",
         "namespace": "default",
-        "team": "dev"
+        "team": "devops"
     },
     "commonAnnotations": {
         "summary": "Container named  in  in default is using more than 75% of Memory Limit"

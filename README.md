@@ -1,10 +1,12 @@
-# thy-notification
-- Provides centralized notification service for alarm or alert message.
+# thy-target
+- Provides centralized target service for alarm or alert message.
 - Provides UI to manage target addresses such as phone numbers (mobile), email addresses and slack webhook address, etc.
 - Supports prometheus alertmanager's webhook request.
 
 # How to run
-- java -jar thy-notification.jar
+- Download release version and unzip the package
+- Change to the package home directory and run the following
+  - java -jar thy-notification.jar
 - Access http://localhost:8080/ in your browser
 
 # Config files
@@ -12,11 +14,11 @@
 
 # Usage
 ### 1) Edit config/application.yml
-Modify application.alertmanager configuration. The following example shows notificationId is set as team name. 
+Modify application.alertmanager configuration. The following example shows targetId is set as team name. 
 So you can send messages to target addresses by team name. 
 ```
   alertmanager:
-    notificationId: team:{{ .commonLabels.team }}
+    targetId: team:{{ .commonLabels.team }}
 ```
 Modify application.email configuration.  
 Modify application.webhook configuration. The following example generates an outgoing webhook for each request.
@@ -29,13 +31,13 @@ Modify application.webhook configuration. The following example generates an out
       format: delimiter
 ```
 
-### 2) Register target addresses for your notificationId
-- Access thy-notification's notifications page. (/notifications)
+### 2) Register target addresses for your targetId
+- Access thy-target's targets page. (/targets)
 - Register target addresses for each team.
-For example, if team name is devops you have to register a notification using notificationId value as team:devops
+For example, if team name is devops you have to register a target using targetId value as team:devops
 
 # Test
-You can send prometheus alertmanager's webhook request to thy-notification like below.
+You can send prometheus alertmanager's webhook request to thy-target like below.
 Verify the message is send to all the target addresses.
 
 ```aidl
@@ -86,5 +88,5 @@ The following shows alertmanager's config example.
   receivers:
    - name: "webhook-alert"
       webhook_configs:
-      - url: "http://thy-notification:8080"
+      - url: "http://thy-target:8080"
 ```

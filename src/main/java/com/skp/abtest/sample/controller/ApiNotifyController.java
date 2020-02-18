@@ -29,6 +29,7 @@ public class ApiNotifyController {
 	public ResponseEntity<NotifyResponse> notify(@RequestBody NotifyRequest request) {
 		logger.debug("notify() start: request={}", request);
 		NotifyResponse response = senderManager.notify(request);
+		logger.debug("notify() end: response={}", response);
 		return ResponseEntity.ok(response);
 	}
 
@@ -37,8 +38,9 @@ public class ApiNotifyController {
 	 */
 	@PostMapping(value={ "/webhook" }, consumes={ "application/json;charset=UTF-8" })
 	public ResponseEntity<NotifyResponse> alert(@RequestBody Map webhook) {
-		logger.debug("webhook() start: webhook={}", webhook);
+		logger.debug("webhook() start: request={}", webhook);
 		NotifyResponse response = senderManager.notifyWebhook(webhook);
+		logger.debug("webhook() end: response={}", response);
 		return ResponseEntity.ok(response);
 	}
 

@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.skp.abtest.sample.entity.Notification;
-import com.skp.abtest.sample.entity.NotificationRepository;
+import com.skp.abtest.sample.entity.Target;
+import com.skp.abtest.sample.entity.TargetRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class ApiNotifyControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	@MockBean(name="notificationRepository")
-    private NotificationRepository notificationRepository;
+    private TargetRepository targetRepository;
 
     // Test POST /v1/notify
     @Test
@@ -56,7 +56,7 @@ public class ApiNotifyControllerTest {
     @Test
     public void testPostWebhook() throws Exception {
         // Prepare
-        given(notificationRepository.findById("default")).willReturn(makeNotification());
+        given(targetRepository.findById("default")).willReturn(makeNotification());
 
         String request =  FileHelper.getFileFromResource("webhook-request01.json");
         logger.debug("request=" + request);
@@ -66,8 +66,8 @@ public class ApiNotifyControllerTest {
 //            .andExpect(jsonPath("$", hasSize(1)));
     }
 
-    private Optional<Notification> makeNotification() {
-        Notification n = new Notification();
+    private Optional<Target> makeNotification() {
+        Target n = new Target();
         n.setId("default");
         return Optional.ofNullable(n);
     }

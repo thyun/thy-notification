@@ -55,6 +55,7 @@ public class LDAPTest {
         assertEquals(true, result);
     }
 
+    @Ignore
     @Test
     public void testSearch() throws Exception {
         String user = "skp\\1001291";

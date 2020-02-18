@@ -1,17 +1,10 @@
 package com.skp.abtest.sample;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import javax.servlet.http.Cookie;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
-import com.skp.abtest.sample.entity.Notification;
-import com.skp.abtest.sample.entity.NotificationRepository;
-import org.junit.Ignore;
+import com.skp.abtest.sample.entity.Target;
+import com.skp.abtest.sample.entity.TargetRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -34,14 +27,14 @@ public class MainControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
-    private NotificationRepository notificationRepository;
+    private TargetRepository targetRepository;
 
     @Test
     public void testNotificationRepository() throws Exception {
-        Notification n = new Notification();
+        Target n = new Target();
         n.setId("default");
         n.setPhone("01010001000 01010001001 01010001002");
-        notificationRepository.save(n);
+        targetRepository.save(n);
     }
 
 }

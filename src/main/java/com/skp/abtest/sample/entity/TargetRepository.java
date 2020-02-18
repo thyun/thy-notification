@@ -5,4 +5,4 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface NotificationRepository extends CrudRepository<Notification, String> {}
+public interface TargetRepository extends CrudRepository<Target, String> {}
