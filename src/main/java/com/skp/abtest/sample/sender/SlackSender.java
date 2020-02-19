@@ -46,6 +46,7 @@ public class SlackSender {
     private SenderResponse notifyInternal(NotifyRequest request, String url, String body) {
         SenderResponse response = new SenderResponse();
         response.setId(request.getId());
+        response.setName("slack");
         response.setResult(true);
         try {
             boolean result = httpTransport.sendPost(url, body);

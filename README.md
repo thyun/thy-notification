@@ -74,7 +74,7 @@ curl -X POST http://localhost:8080/v1/webhook -H 'Content-Type: application/json
     "commonAnnotations": {
         "summary": "Container named  in  in default is using more than 75% of Memory Limit"
     }, 
-    "externalURL": "http://prometheus.plab-mini.skplanet.com", 
+    "externalURL": "http://prometheus.example.com", 
     "version": "4", 
     "groupKey": "{}:{alertname=\"High Memory Usage of Container\"}"
 }

@@ -65,7 +65,18 @@ public class HttpTransport {
 //        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        logger.debug("<sendGet> response=" + response.getBody());
         return response.getStatusCode().is2xxSuccessful();
+    }
+
+    public ResponseEntity<String> sendGetRequest(String url) {
+        logger.debug("<sendGet> url={}", url);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        logger.debug("<sendGet> response=" + response.getBody());
+        return response;
     }
 
     public boolean sendPost(String url, String body) {
@@ -75,6 +86,18 @@ public class HttpTransport {
 
         HttpEntity<String> request = new HttpEntity<>(body, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+        logger.debug("<sendPost> response=" + response.getBody());
         return response.getStatusCode().is2xxSuccessful();
+    }
+
+    public ResponseEntity<String> sendPostRequest(String url, String body) {
+        logger.debug("<sendPost> url={} body={}", url, body);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+        logger.debug("<sendPost> response=" + response.getBody());
+        return response;
     }
 }

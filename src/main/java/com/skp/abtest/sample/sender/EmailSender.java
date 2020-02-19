@@ -38,6 +38,7 @@ public class EmailSender {
     private SenderResponse notifyInternal(NotifyRequest request, String from, String[] to) {
         SenderResponse response = new SenderResponse();
         response.setId(request.getId());
+        response.setName("email");
         response.setResult(true);
         try {
             mailSender.send(buildMailMessage(from, to, request.getTitle(), request.getMessage()));

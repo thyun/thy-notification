@@ -10,8 +10,8 @@ import java.util.Map;
 public class NotifyResponse {
     String id;
     boolean result;
-    int status = 200;
     String error;
+    int status = 200;
 
     List<SenderResponse> email;
     List<SenderResponse> slack;
