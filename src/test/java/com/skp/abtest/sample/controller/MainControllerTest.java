@@ -1,4 +1,4 @@
-package com.skp.abtest.sample;
+package com.skp.abtest.sample.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

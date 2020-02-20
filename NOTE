@@ -1,5 +1,13 @@
 # TODO
 1) API 기능
+- webhook url
+  * content-type 설정
+  * +/- button 다시 작성
+  * document
+    slack (https://api.slack.com/messaging/webhooks#sending_messages)
+    ms teams (https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook)
+    First, you have to create incoming webhook.
+    Enter the underlined part from created webhook url - https://hooks.slack.com/services/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
 - telegram
 - 1건이라도 fail이면 NotifyResponse fail로 설정 (slack의 경우 여러 건 중 일부만 성공 가능)
 - send retry?
@@ -8,6 +16,9 @@
 - NotifyRequest -> Map으로 변경? (JsonHelper.getExpValue() 사용하기 위해)
 
 2) 추후
+- Webhook URL
+  * url validation if set
+  * https://getbootstrap.com/docs/4.4/examples/checkout/ -> submit 하면 invalid-feedback은 어떻게 표시되나?
 - line, kakao sender?
 - docker
 - message에 generatorURL link 추가 기능
@@ -17,7 +28,9 @@
 - templates/users/new-user.html - form input font-size .875rem 설정이 안됨
 
 # DONE
-- webhook sender by post method (get method 완료)
+- webhook url
+  * get/post method
+  * choose name시 자동 입력
 - application.yml에서 expression 사용 가능한 필드
   * alertmanager.notificationId - alertmanager webhook의 모든 필드
   * webhook.url - NotifyRequest의 일부 필드
@@ -92,4 +105,4 @@ Response:
 # Reference
 https://dzone.com/articles/spring-boot-thymeleaf-template-decorator-using-thy
 https://github.com/sanaulla123/samples/tree/master/thymeleaf-layout-dialect-boot
-Bootstrap examples: album, starter-template, dashboard
+https://www.baeldung.com/thymeleaf-list

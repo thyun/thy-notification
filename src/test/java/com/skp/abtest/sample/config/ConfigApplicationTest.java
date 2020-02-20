@@ -1,5 +1,7 @@
 package com.skp.abtest.sample.config;
 
+import com.skp.abtest.sample.entity.Target;
+import com.skp.abtest.sample.entity.TargetRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,10 +18,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ConfigTest {
+public class ConfigApplicationTest {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
+    @Autowired
     private ConfigApplication configApplication;
 
     @Test

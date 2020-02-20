@@ -3,15 +3,16 @@ package com.skp.abtest.sample.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
 @Data
 public class Target {
     @Id
+    @NotBlank(message = "ID is mandatory")
     private String id;
 
     @Column(length = 1024)
@@ -22,6 +23,11 @@ public class Target {
 
     @Column(length = 1024)
     private String slack;
+
+    @Valid
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "target_id")
+    private Collection<WebhookUrl> webhookUrls = new ArrayList<>();
 
     public List<String> getEmailList() {
         if (email == null || email.length() == 0)
@@ -47,6 +53,21 @@ public class Target {
             return new ArrayList<>();
 
         return Arrays.asList(phone.split(" "));
+    }
+
+    public void addWebhookUrl(WebhookUrl w) {
+//        if (webhookUrls == null)
+//            webhookUrls = new ArrayList<>();
+        webhookUrls.add(w);
+    }
+
+    @Override
+    public String toString() {
+        String result = "[Target] id=" + id;
+        for (WebhookUrl webhookUrl: webhookUrls) {
+            result += "\n" + webhookUrl.toString();
+        }
+        return result;
     }
 
 }

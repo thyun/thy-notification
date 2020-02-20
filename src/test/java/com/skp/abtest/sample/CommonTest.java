@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 
 public class CommonTest {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     ObjectMapper objectMapper = new ObjectMapper();
 
 

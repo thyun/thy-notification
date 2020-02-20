@@ -1,4 +1,4 @@
-package com.skp.abtest.sample;
+package com.skp.abtest.sample.controller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
