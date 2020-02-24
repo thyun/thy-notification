@@ -28,8 +28,6 @@ public class ITMainControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-// 	private String PLAB_UID = "84fdefe9-d46d-4191-8cc7-00b09e91a45f";
-
     @Test
     public void getIndex() throws Exception {
 

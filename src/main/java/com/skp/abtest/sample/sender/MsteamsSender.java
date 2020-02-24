@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SlackSender {
+public class MsteamsSender {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${application.slack.body}") String body;
+    @Value("${application.msteams.body}") String body;
 
     HttpTransport httpTransport;
-    public SlackSender(HttpTransport httpTransport) {
+    public MsteamsSender(HttpTransport httpTransport) {
         this.httpTransport = httpTransport;
     }
 
@@ -26,7 +26,7 @@ public class SlackSender {
         for (SlackRequest slackRequest: request.getSlack()) {
             String url = buildUrl(request, slackRequest);
             String body = buildBody(request, slackRequest);
-            logger.debug("<notify> slack: url={} body={}", url, body);
+            logger.debug("<notify> msteams: url={} body={}", url, body);
             SenderResponse response = notifyInternal(request, url, body);
             responseList.add(response);
         }
@@ -39,17 +39,12 @@ public class SlackSender {
     
     private String buildBody(NotifyRequest request, SlackRequest channel) {
         return JsonHelper.getExpressionValue(request, body, "json");
-//        return String.format("{ \"text\": \"%s\" }", buildTitleAndMessage(request.getTitle(), request.getMessage()));
     }
-
-//    private Object buildTitleAndMessage(String title, String message) {
-//        return String.format("[%s]\n%s", title, message);
-//    }
 
     private SenderResponse notifyInternal(NotifyRequest request, String url, String body) {
         SenderResponse response = new SenderResponse();
         response.setId(request.getId());
-        response.setName("slack");
+        response.setName("msteams");
         response.setResult(true);
         try {
             boolean result = httpTransport.sendPost(url, body);

@@ -9,7 +9,7 @@
                 "container_name": "broker",
                 "namespace": "default",
                 "pod_name": "kafka-0",
-                "team": "dev"
+                "team": "devops"
             },
             "annotations": {
                 "summary": "Container named  in  in default is using more than 75% of Memory Limit"
@@ -25,7 +25,7 @@
                 "container_name": "zookeeper",
                 "namespace": "default",
                 "pod_name": "zookeeper-0",
-                "team": "dev"
+                "team": "devops"
             },
             "annotations": {
                 "summary": "Container named  in  in default is using more than 75% of Memory Limit"

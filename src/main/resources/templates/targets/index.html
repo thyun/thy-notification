@@ -27,7 +27,8 @@
           <th>Phones(Mobile)</th>
           <th>Emails</th>
           <th>Slack webhook</th>
-          <th>Webhook URL</th>
+          <th>MS Teams webhook</th>
+          <th>Custom webhook</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -37,9 +38,12 @@
           <td th:text="${item.phone}"></td>
           <td th:text="${item.email}"></td>
           <td th:text="${item.slack}"></td>
+          <td th:text="${item.msteams}"></td>
           <td>
-            <span th:each="webhookUrl : ${item.webhookUrls}" th:text="${webhookUrl.name} + ' - ' + ${webhookUrl.url}" class="label label-high">
+            <span th:each="webhookUrl : ${item.webhookUrls}" th:text="${webhookUrl.url}">
             </span>
+<!--            <span th:each="webhookUrl : ${item.webhookUrls}" th:text="${webhookUrl.name} + ' - ' + ${webhookUrl.url}" class="label label-high">
+            </span> -->
           </td>
           <td>
             <a th:href="@{/targets/edit/{id}(id=${item.id})}"><i class="fas fa-user-edit fa-lg"></i></a>

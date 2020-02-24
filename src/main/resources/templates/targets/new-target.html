@@ -35,40 +35,49 @@
     </div>
     <div class="form-group row">
       <label for="slack" class="col-sm-2 col-form-label">Slack webhook</label>
-      <div class="col-sm-10">
+      <div class="col-sm-7">
         <input type="text" th:field="*{slack}" class="form-control" id="slack" placeholder="Slack webhook url">
         <span th:if="${#fields.hasErrors('slack')}" th:errors="*{slack}" class="text-danger"></span>
-        <div class="alert alert-primary">
-              <ol>
-                <li>First, you have to create incoming webhook.
-                <a href="https://api.slack.com/incoming-webhooks#sending_messages" target="_blank" class="btn btn-primary btn-sm">Create Incoming Webhook</a></li>
-                <li>Enter the underlined part from created webhook url - https://hooks.slack.com/services/<u class="hl">T0NCP1206/B1XATJACV/rVeAtdOWYglkbiLqaisw58fo</u></li>
-              </ol>
-        </div>
+      </div>
+      <div class="col-sm-3">
+        <a href="https://api.slack.com/incoming-webhooks#sending_messages" target="_blank" class="btn btn-primary btn-sm role">Create slack webhook</a>
       </div>
     </div>
-
+    <div class="form-group row">
+      <label for="msteams" class="col-sm-2 col-form-label">MS Teams webhook</label>
+      <div class="col-sm-7">
+        <input type="text" th:field="*{msteams}" class="form-control" id="msteams" placeholder="MS Teams webhook url">
+        <span th:if="${#fields.hasErrors('msteams')}" th:errors="*{msteams}" class="text-danger"></span>
+      </div>
+      <div class="col-sm-3">
+        <a href="https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook" target="_blank" class="btn btn-primary btn-sm role">Create MS Teams webhook</a>
+      </div>
+    </div>
 
 
 
     <div class="form-group" id="webhook-url-group">
       <fieldset th:each="webhookUrl, itemStat : *{webhookUrls}" class="entry">
         <div class="form-group row">
-          <label class="col-sm-2 control-label">Webhook URL</label>
+          <label class="col-sm-2 col-form-label">Custom webhook</label>
 
           <!-- Webhook URL right column (+/- button) -->
+          <!--
           <div class="col-sm-1 order-md-2 mb-2">
             <div class="row">
-              <button type="button" class="btn btn-outline-primary add-entry">+</button>
-              <button type="button" class="btn btn-outline-primary remove-entry">-</button>
+              <button type="button" class="btn btn-outline-primary btn-sm add-entry">+</button>
+              <button type="button" class="btn btn-outline-primary btn-sm remove-entry">-</button>
             </div>
           </div>
+          -->
 
           <!-- Webhook URL content column --->
           <div class="col-sm-9 order-md-1">
             <div class="row mb-2">
               <div class="col-md-3">
-                <div class="input-group">
+                <input th:field="*{webhookUrls[__${itemStat.index}__].name}" type="text" class="form-control form-control-sm webhook-url-name" placeholder="Name" value="" required="">
+                <!--
+                <div class="input-group input-group-sm">
                   <input th:field="*{webhookUrls[__${itemStat.index}__].name}" type="text" class="form-control webhook-url-name" placeholder="Name" value="" required="">
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose</button>
@@ -78,10 +87,11 @@
                     </div>
                   </div>
                 </div>
+                -->
                 <span th:if="${#fields.hasErrors('webhookUrls[__${itemStat.index}__].name')}" th:errors="*{webhookUrls[__${itemStat.index}__].name}" class="text-danger"></span>
               </div>
               <div class="col-md-3">
-                <select th:field="*{webhookUrls[__${itemStat.index}__].method}" th:value="*{webhookUrls[__${itemStat.index}__].method}" class="custom-select d-block w-100 webhook-url-method" required="">
+                <select th:field="*{webhookUrls[__${itemStat.index}__].method}" th:value="*{webhookUrls[__${itemStat.index}__].method}" class="custom-select custom-select-sm d-block w-100 webhook-url-method" required="">
                   <option value="">Choose method</option>
                   <option value="GET">GET</option>
                   <option value="POST">POST</option>
@@ -91,12 +101,12 @@
             </div>
 
             <div class="mb-2">
-              <input th:field="*{webhookUrls[__${itemStat.index}__].url}" type="text" class="form-control webhook-url-url" placeholder="URL">
+              <input th:field="*{webhookUrls[__${itemStat.index}__].url}" type="text" class="form-control form-control-sm webhook-url-url" placeholder="URL">
               <span th:if="${#fields.hasErrors('webhookUrls[__${itemStat.index}__].url')}" th:errors="*{webhookUrls[__${itemStat.index}__].url}" class="text-danger"></span>
             </div>
 
             <div class="mb-2">
-              <textarea th:field="*{webhookUrls[__${itemStat.index}__].body}" type="text" class="form-control webhook-url-body" rows="1" placeholder="HTTP POST Body (Optional)"></textarea>
+              <textarea th:field="*{webhookUrls[__${itemStat.index}__].body}" type="text" class="form-control form-control-sm webhook-url-body" rows="1" placeholder="HTTP POST Body (Optional)"></textarea>
               <span th:if="${#fields.hasErrors('webhookUrls[__${itemStat.index}__].body')}" th:errors="*{webhookUrls[__${itemStat.index}__].body}" class="text-danger"></span>
             </div>
             <hr class="mb-4">
@@ -120,13 +130,13 @@
   <script type="text/html" id="webhook-url-entry">
     <fieldset class="entry">
       <div class="form-group row">
-        <label class="col-sm-2 control-label">Webhook URL</label>
+        <label class="col-sm-2 col-form-label">Custom webhook</label>
 
         <!-- Webhook URL right column (+/- button) -->
         <div class="col-sm-1 order-md-2 mb-2">
           <div class="row">
-            <button type="button" class="btn btn-outline-primary add-entry">+</button>
-            <button type="button" class="btn btn-outline-primary remove-entry">-</button>
+            <button type="button" class="btn btn-outline-primary btn-sm add-entry">+</button>
+            <button type="button" class="btn btn-outline-primary btn-sm remove-entry">-</button>
           </div>
         </div>
 
@@ -134,20 +144,11 @@
         <div class="col-sm-9 order-md-1">
           <div class="row mb-2">
             <div class="col-md-3">
-              <div class="input-group">
-                <input name="{{webhook-url-name}}" type="text" class="form-control webhook-url-name" placeholder="Name" value="" required="">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose</button>
-                  <div class="dropdown-menu">
-                    <a class="dropdown-item" href="javascript:void(0)" value="slack">Slack</a>
-                    <a class="dropdown-item" href="javascript:void(0)" value="ms-teams">MS Teams</a>
-                  </div>
-                </div>
-              </div>
+              <input name="{{webhook-url-name}}" type="text" class="form-control webhook-url-name" placeholder="Name" value="" required="">
               <span class="text-danger"></span>
             </div>
             <div class="col-md-3">
-              <select name="{{webhook-url-method}}" class="custom-select d-block w-100 webhook-url-method" required="">
+              <select name="{{webhook-url-method}}" class="custom-select custom-select-sm d-block w-100 webhook-url-method" required="">
                 <option value="">Choose method</option>
                 <option>GET</option>
                 <option>POST</option>
@@ -157,12 +158,12 @@
           </div>
 
           <div class="mb-2">
-            <input name="{{webhook-url-url}}" type="text" class="form-control webhook-url-url" placeholder="URL">
+            <input name="{{webhook-url-url}}" type="text" class="form-control form-control-sm webhook-url-url" placeholder="URL">
             <span class="text-danger"></span>
           </div>
 
           <div class="mb-2">
-            <textarea name="{{webhook-url-body}}" class="form-control webhook-url-body" rows="1" placeholder="HTTP POST Body (Optional)"></textarea>
+            <textarea name="{{webhook-url-body}}" class="form-control form-control-sm webhook-url-body" rows="1" placeholder="HTTP POST Body (Optional)"></textarea>
             <span class="text-danger"></span>
           </div>
           <hr class="mb-4">

@@ -10,10 +10,12 @@ import java.util.Map;
 public class NotifyResponse {
     String id;
     boolean result;
-    String error;
+    String error = "";
     int status = 200;
 
+    List<SenderResponse> phone;
     List<SenderResponse> email;
     List<SenderResponse> slack;
+    List<SenderResponse> msteams;
     List<SenderResponse> webhook;
 }

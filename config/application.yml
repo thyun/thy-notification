@@ -5,25 +5,26 @@ logging:
 application:
   alertmanager:
     targetId: team:{{ .commonLabels.team }}
+  phone:
+    use: true
+    url: http://localhost:9000/send?phoneNum={{ .phone }}&msg={{ .message }}&callbackNum=01050078766
+    method: GET
+    body: ''
+    format: delimiter
   email:
+    use: true
     host: smtp.gmail.com
     port: 587
     auth: true
     username: abcd@gmail.com
     password: zgtgfteyivkzrsdf
   slack:
-    url: https://hooks.slack.com/services/
+    use: true
+    body: '{ "text": "{{ .title }}\n{{ .message }}" }'
+  msteams:
+    use: true
+    body: '{ "@context":"https://schema.org/extensions", "@type":"MessageCard", "themeColor":"0072C6", "title":"{{ .title }}", "text":"{{ .message }}" }'
   webhook:
-    - name: sms
-      url: http://localhost:9000/send?phoneNum={{ .phone }}&msg={{ .message }}&callbackNum=01050078766
-      method: GET
-      body: ''
-      format: delimiter
-    - name: msteams
-      url: https://outlook.office.com/webhook/1f10ad42-952a-4f67-82b5-0dd15135fd89@c0e04683-773c-43be-a906-36be87292cc2/IncomingWebhook/21f9bc48490747a8aa05b350296f853a/27206cbd-4df7-424c-b060-57b7eb770d83
-      method: POST
-      body: '{ "@context":"https://schema.org/extensions", "@type":"MessageCard", "themeColor":"0072C6", "title":"{{ .title }}", "text":"{{ .message }}" }'
-      format: json
   proxy:
     use: false
     url: http://172.22.134.22

@@ -11,9 +11,11 @@ public class NotifyRequest {
     String targetId;
     String title;
     String message;
-    List<String> phones = new ArrayList<>();
+    List<String> phone = new ArrayList<>();
     List<String> email = new ArrayList<>();
-    List<SlackChannel> slack = new ArrayList<>();
-    List<Object> telegram;
-    List<Object> kakaotalk;
+    List<SlackRequest> slack = new ArrayList<>();
+    List<MsteamsRequest> msteams = new ArrayList<>();
+    List<WebhookRequest> webhook = new ArrayList<>();
+//    List<Object> telegram;
+//    List<Object> kakaotalk;
 }

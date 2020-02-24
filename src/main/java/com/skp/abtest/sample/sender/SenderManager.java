@@ -14,12 +14,17 @@ import java.util.Optional;
 public class SenderManager {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    TargetRepository targetRepository;
-    @Autowired SlackSender slackSender;
-    @Autowired EmailSender emailSender;
-    @Autowired WebhookSender webhookSender;
+    @Autowired TargetRepository targetRepository;
     @Value("${application.alertmanager.targetId}") String targetId;
+    @Value("${application.phone.use}") boolean phoneUse;
+    @Value("${application.email.use}") boolean emailUse;
+    @Value("${application.slack.use}") boolean slackUse;
+    @Value("${application.msteams.use}") boolean msteamsUse;
+    @Autowired PhoneSender phoneSender;
+    @Autowired EmailSender emailSender;
+    @Autowired SlackSender slackSender;
+    @Autowired MsteamsSender msteamsSender;
+    @Autowired WebhookSender webhookSender;
 
     // TODO partial success? result가 1개라도 fail이면 fail?
     public
@@ -28,17 +33,20 @@ public class SenderManager {
         boolean result = true;
 
         // Lookup notification
-        Optional<Target> notification = targetRepository.findById(request.getTargetId());
-        if (!notification.isPresent())
-            return makeErrorResponse(request, "Notification id not found");
+        Optional<Target> target = targetRepository.findById(request.getTargetId());
+        if (!target.isPresent())
+            return makeErrorResponse(request, String.format("Target id(%s) not found", request.getTargetId()));
 
-        request = mergeTarget(request, notification);
+        request = mergeTarget(request, target);
         logger.debug("merged request={}", request);
-        if (existSlack(request))
-            response.setSlack(slackSender.notify(request));
-        if (existEmail(request))
+        if (existPhone(request) && phoneUse)
+            response.setPhone(phoneSender.notify(request));
+        if (existEmail(request) && emailUse)
             response.setEmail(emailSender.notify(request));
-
+        if (existSlack(request) && slackUse)
+            response.setSlack(slackSender.notify(request));
+        if (existMsteams(request) && msteamsUse)
+            response.setMsteams(msteamsSender.notify(request));
         response.setWebhook(webhookSender.notify(request));
 
         response.setId(request.getId());
@@ -46,10 +54,11 @@ public class SenderManager {
         return response;
     }
 
-    private NotifyRequest mergeTarget(NotifyRequest request, Optional<Target> notification) {
-        request.getEmail().addAll(notification.get().getEmailList());
-        request.getSlack().addAll(notification.get().getSlackList());
-        request.getPhones().addAll(notification.get().getPhoneList());
+    private NotifyRequest mergeTarget(NotifyRequest request, Optional<Target> target) {
+        request.getPhone().addAll(target.get().getPhoneList());
+        request.getEmail().addAll(target.get().getEmailList());
+        request.getSlack().addAll(target.get().getSlackList());
+        request.getMsteams().addAll(target.get().getMsteamsList());
         return request;
     }
 
@@ -63,21 +72,28 @@ public class SenderManager {
     }
 
     long webhookId = 1;
+    String webhookTitle = "[Notification - AlertManager]";
+    String webhookMessage = "Alert: {{ .commonLabels.alertname }}\nSummary:{{ .commonAnnotations.summary }}";   // + "RawData: {{ .CommonLabels }}";
     public NotifyResponse notifyWebhook(Map webhook) {
         NotifyRequest request = new NotifyRequest();
         request.setId(String.format("alertmanager-%d", webhookId++));
         request.setTargetId(buildTargetId(webhook, targetId));
-        request.setTitle("[Notification - AlertManager]");
+        request.setTitle(webhookTitle);
         request.setMessage(buildWebhookMessage(webhook));
         return notify(request);
     }
 
     private String buildTargetId(Map webhook, String targetId) {
-        return JsonHelper.getExpValue(webhook, targetId);
+        return JsonHelper.getExpressionValue(webhook, targetId, "json");
     }
 
-    // 'Alert: {{ .CommonLabels.alertname }}. Summary:{{ .CommonAnnotations.summary }}. RawData: {{ .CommonLabels }}'
     private String buildWebhookMessage(Map webhook) {
+        String status = (String) webhook.get("status");
+        List list = (List) webhook.get("alerts");
+        int count = list.size();
+        String message = JsonHelper.getExpressionValue(webhook, webhookMessage, "json");
+        return String.format("[%s:%d]\n%s", status, count, message);
+/*
         String status = (String) webhook.get("status");
         List list = (List) webhook.get("alerts");
         int count = list.size();
@@ -87,6 +103,13 @@ public class SenderManager {
         map = (Map) webhook.get("commonAnnotations");
         String summary = (String) map.getOrDefault("summary", "");
         return String.format("[%s:%d]\nAlert:%s\nSummary:%s", status, count, alertname, summary);
+ */
+    }
+
+    private boolean existPhone(NotifyRequest request) {
+        if (request.getPhone() != null && request.getPhone().size() > 0)
+            return true;
+        return false;
     }
 
     private boolean existEmail(NotifyRequest request) {
@@ -101,10 +124,11 @@ public class SenderManager {
         return false;
     }
 
-    private boolean existPhone(NotifyRequest request) {
-        if (request.getPhones() != null && request.getPhones().size() > 0)
+    private boolean existMsteams(NotifyRequest request) {
+        if (request.getMsteams() != null && request.getMsteams().size() > 0)
             return true;
         return false;
     }
+
 
 }

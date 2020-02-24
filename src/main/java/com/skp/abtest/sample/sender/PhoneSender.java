@@ -8,39 +8,40 @@ import com.skp.abtest.sample.util.JsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WebhookSender {
+public class PhoneSender {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired ConfigApplication configApplication;
     @Autowired HttpTransport httpTransport;
+    @Value("${application.phone.url}") String url;
+    @Value("${application.phone.method}") String method;
+    @Value("${application.phone.body}") String body;
+    @Value("${application.phone.format}") String format;
 
     public List<SenderResponse> notify(NotifyRequest request) {
         ArrayList<SenderResponse> responseList = new ArrayList<>();
 
-        for (ConfigWebhook configWebhook: configApplication.getWebhook()) {
-            logger.debug("configWebhook={}", configWebhook);
-            SenderResponse response = notifyInternal(request, configWebhook);
-            responseList.add(response);
-        }
+        SenderResponse response = notifyInternal(request);
+        responseList.add(response);
         return responseList;
     }
 
-    private SenderResponse notifyInternal(NotifyRequest request, ConfigWebhook configWebhook) {
+    private SenderResponse notifyInternal(NotifyRequest request) {
         SenderResponse response = new SenderResponse();
         response.setId(request.getId());
-        response.setName(configWebhook.getName());
+        response.setName("phone");
         response.setResult(true);
 
         try {
             ResponseEntity<String> httpResponse;
-            if ("GET".equals(configWebhook.getMethod()))
-                httpResponse = httpTransport.sendGetRequest(buildUrl(request, configWebhook));
+            if ("GET".equals(method))
+                httpResponse = httpTransport.sendGetRequest(buildUrl(request));
             else
-                httpResponse = httpTransport.sendPostRequest(buildUrl(request, configWebhook), buildBody(request, configWebhook));
+                httpResponse = httpTransport.sendPostRequest(buildUrl(request), buildBody(request));
             response.setResult(httpResponse.getStatusCode().is2xxSuccessful());
             if (!response.isResult())
                 response.setError(httpResponse.getBody());
@@ -51,24 +52,28 @@ public class WebhookSender {
         return response;
     }
 
-    private String buildUrl(NotifyRequest request, ConfigWebhook configWebhook) {
-        return JsonHelper.getExpressionValue(request, configWebhook.getUrl(), configWebhook.getFormat());
-
-/*        String value = configWebhook.getUrl();
+    private String buildUrl(NotifyRequest request) {
+        return JsonHelper.getExpressionValue(request, url, format);
+/*        String value = url;
+        value = value.replace("{{ .phone }}", buildValueList(request.getPhone(), format));
         value = value.replace("{{ .title }}", request.getTitle());
         value = value.replace("{{ .message }}", request.getMessage());
-        value = value.replace("{{ .phone }}", buildValueList(request.getPhone(), configWebhook.getFormat()));
         return value; */
     }
 
-    private String buildBody(NotifyRequest request, ConfigWebhook configWebhook) {
-        return JsonHelper.getExpressionValue(request, configWebhook.getBody(), configWebhook.getFormat());
-
-/*        String value = configWebhook.getBody();
+    private String buildBody(NotifyRequest request) {
+        return JsonHelper.getExpressionValue(request, body, format);
+/*        String value = body;
+        value = value.replace("{{ .phone }}", buildValueList(request.getPhone(), format));
         value = value.replace("{{ .title }}", request.getTitle());
         value = value.replace("{{ .message }}", request.getMessage());
-        value = value.replace("{{ .phone }}", buildValueList(request.getPhone(), configWebhook.getFormat()));
         return value; */
+    }
+
+    private String buildValueList(List<String> phoneList, String format) {
+        if ("json".equals(format))
+            return JsonHelper.writeValue(phoneList);
+        return String.join(",", phoneList);
     }
 
 }

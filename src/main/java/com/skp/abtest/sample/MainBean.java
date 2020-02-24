@@ -13,6 +13,9 @@ public class MainBean {
     }
 
     @Bean
+    PhoneSender phoneSender() { return new PhoneSender(); }
+
+    @Bean
     EmailSender emailSender(
             @Value("${application.email.host}") String host,
             @Value("${application.email.port}") int port,
@@ -30,10 +33,12 @@ public class MainBean {
     }
 
     @Bean
-    WebhookSender webhookSender() {
-        WebhookSender webhookSender = new WebhookSender();
-        return webhookSender;
+    MsteamsSender msteamsSender(HttpTransport httpTransport) {
+        return new MsteamsSender(httpTransport);
     }
+
+    @Bean
+    WebhookSender webhookSender() { return new WebhookSender(); }
 
     @Bean
     HttpTransport httpTransport(

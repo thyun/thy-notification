@@ -17,7 +17,6 @@ public class CommonTest {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     ObjectMapper objectMapper = new ObjectMapper();
 
-
     @Test
     public void testNotification() {
         Target n = new Target();
@@ -36,21 +35,36 @@ public class CommonTest {
     }
 
     @Test
-    public void testGetExpValue() throws IOException {
+    public void testGetPathValue1() throws IOException {
+        Map request = objectMapper.readValue(FileHelper.getFileFromResource("notify-request01.json"), Map.class);
+        String value = JsonHelper.getPathValue(request, "{{ .title }}", "json");
+        assertEquals("제목", value);
+
+        value = JsonHelper.getPathValue(request, "{{ .phone }}", "json");
+        assertEquals("[\"01010001001\",\"01010001002\"]", value);
+
+        value = JsonHelper.getPathValue(request, "{{ .phone }}", "delimiter");
+        assertEquals("01010001001,01010001002", value);
+    }
+
+
+    @Test
+    public void testGetPathValue2() throws IOException {
         Map request = objectMapper.readValue(FileHelper.getFileFromResource("webhook-request01.json"), Map.class);
-        String exp = "Alert: {{ .commonLabels.alertname }}. Summary: {{ .commonAnnotations.summary }}";
-        String value = JsonHelper.getExpValue(request, exp);
-        assertEquals("Alert: High Memory Usage of Container. Summary: Container named  in  in default is using more than 75% of Memory Limit", value);
+        String value = JsonHelper.getPathValue(request, "{{ .commonLabels.alertname }}", "json");
+        assertEquals("High Memory Usage of Container", value);
+
+//        value = JsonHelper.getPathValue(request, "default");
+//        assertEquals("default", value);
     }
 
     @Test
-    public void testGetPathValue() throws IOException {
+    public void testGetExpressionValue() throws IOException {
         Map request = objectMapper.readValue(FileHelper.getFileFromResource("webhook-request01.json"), Map.class);
-        String value = JsonHelper.getPathValue(request, "{{ .commonLabels.alertname }}");
-        assertEquals("High Memory Usage of Container", value);
-
-        value = JsonHelper.getPathValue(request, "default");
-        assertEquals("default", value);
+        String exp = "Alert: {{ .commonLabels.alertname }}. Summary: {{ .commonAnnotations.summary }}";
+        String value = JsonHelper.getExpressionValue(request, exp, "json");
+        assertEquals("Alert: High Memory Usage of Container. Summary: Container named  in  in default is using more than 75% of Memory Limit", value);
     }
+
 
 }

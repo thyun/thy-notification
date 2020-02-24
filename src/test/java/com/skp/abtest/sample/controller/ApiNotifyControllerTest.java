@@ -38,12 +38,16 @@ public class ApiNotifyControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	@MockBean(name="notificationRepository")
+	@MockBean(name="targetRepository")
     private TargetRepository targetRepository;
 
     // Test POST /v1/notify
     @Test
     public void testPostNotify() throws Exception {
+        // Prepare
+        String targetId = "default";
+        given(targetRepository.findById(targetId)).willReturn(makeNotification(targetId));
+
         NotifyRequest request = objectMapper.readValue(FileHelper.getFileFromResource("notify-request01.json"), NotifyRequest.class);
         logger.debug("request=" + request);
         this.mockMvc.perform(post("/v1/notify").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
@@ -56,7 +60,8 @@ public class ApiNotifyControllerTest {
     @Test
     public void testPostWebhook() throws Exception {
         // Prepare
-        given(targetRepository.findById("default")).willReturn(makeNotification());
+        String targetId = "team:devops";
+        given(targetRepository.findById(targetId)).willReturn(makeNotification(targetId));
 
         String request =  FileHelper.getFileFromResource("webhook-request01.json");
         logger.debug("request=" + request);
@@ -66,9 +71,11 @@ public class ApiNotifyControllerTest {
 //            .andExpect(jsonPath("$", hasSize(1)));
     }
 
-    private Optional<Target> makeNotification() {
-        Target n = new Target();
-        n.setId("default");
-        return Optional.ofNullable(n);
+    private Optional<Target> makeNotification(String targetId) {
+        Target target = new Target();
+        target.setId(targetId);
+        target.setPhone("01010001001 01010001002");
+//        target.setSlack("http://localhost:9000");
+        return Optional.ofNullable(target);
     }
 }
