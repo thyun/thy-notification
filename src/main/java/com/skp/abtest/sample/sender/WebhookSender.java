@@ -4,6 +4,7 @@ import com.skp.abtest.sample.config.ConfigApplication;
 import com.skp.abtest.sample.config.ConfigWebhook;
 import com.skp.abtest.sample.entity.NotifyRequest;
 import com.skp.abtest.sample.entity.SenderResponse;
+import com.skp.abtest.sample.entity.Webhook;
 import com.skp.abtest.sample.util.JsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,16 +21,53 @@ public class WebhookSender {
 
     public List<SenderResponse> notify(NotifyRequest request) {
         ArrayList<SenderResponse> responseList = new ArrayList<>();
+        for (Webhook webhook : request.getWebhook()) {
+            logger.debug("webhook={}" + webhook);
+            SenderResponse response = notifyInternal(request, webhook);
+            responseList.add(response);
+ /*           String url = buildUrl(request, slack);
+            String body = buildBody(request, slack);
+            logger.debug("<notify> msteams: url={} body={}", url, body);
+            SenderResponse response = notifyInternal(request, url, body);
+            responseList.add(response); */
+        }
+        return responseList;
+    }
+
+    public List<SenderResponse> notifyConfig(NotifyRequest request) {
+        ArrayList<SenderResponse> responseList = new ArrayList<>();
 
         for (ConfigWebhook configWebhook: configApplication.getWebhook()) {
             logger.debug("configWebhook={}", configWebhook);
-            SenderResponse response = notifyInternal(request, configWebhook);
+            SenderResponse response = notifyConfigInternal(request, configWebhook);
             responseList.add(response);
         }
         return responseList;
     }
 
-    private SenderResponse notifyInternal(NotifyRequest request, ConfigWebhook configWebhook) {
+    private SenderResponse notifyInternal(NotifyRequest request, Webhook webhook) {
+        SenderResponse response = new SenderResponse();
+        response.setId(request.getId());
+        response.setName(webhook.getName());
+        response.setResult(true);
+
+        try {
+            ResponseEntity<String> httpResponse;
+            if ("GET".equals(webhook.getMethod()))
+                httpResponse = httpTransport.sendGetRequest(buildUrl(request, webhook));
+            else
+                httpResponse = httpTransport.sendPostRequest(buildUrl(request, webhook), buildBody(request, webhook));
+            response.setResult(httpResponse.getStatusCode().is2xxSuccessful());
+            if (!response.isResult())
+                response.setError(httpResponse.getBody());
+        } catch (RuntimeException e) {
+            logger.error(e.toString(), e);
+            response.setResult(false);
+        }
+        return response;
+    }
+
+    private SenderResponse notifyConfigInternal(NotifyRequest request, ConfigWebhook configWebhook) {
         SenderResponse response = new SenderResponse();
         response.setId(request.getId());
         response.setName(configWebhook.getName());
@@ -51,24 +89,20 @@ public class WebhookSender {
         return response;
     }
 
+    private String buildUrl(NotifyRequest request, Webhook webhook) {
+        return JsonHelper.getExpressionValue(request, webhook.getUrl(), webhook.getFormat());
+    }
+
+    private String buildBody(NotifyRequest request, Webhook webhook) {
+        return JsonHelper.getExpressionValue(request, webhook.getBody(), webhook.getFormat());
+    }
+
     private String buildUrl(NotifyRequest request, ConfigWebhook configWebhook) {
         return JsonHelper.getExpressionValue(request, configWebhook.getUrl(), configWebhook.getFormat());
-
-/*        String value = configWebhook.getUrl();
-        value = value.replace("{{ .title }}", request.getTitle());
-        value = value.replace("{{ .message }}", request.getMessage());
-        value = value.replace("{{ .phone }}", buildValueList(request.getPhone(), configWebhook.getFormat()));
-        return value; */
     }
 
     private String buildBody(NotifyRequest request, ConfigWebhook configWebhook) {
         return JsonHelper.getExpressionValue(request, configWebhook.getBody(), configWebhook.getFormat());
-
-/*        String value = configWebhook.getBody();
-        value = value.replace("{{ .title }}", request.getTitle());
-        value = value.replace("{{ .message }}", request.getMessage());
-        value = value.replace("{{ .phone }}", buildValueList(request.getPhone(), configWebhook.getFormat()));
-        return value; */
     }
 
 }

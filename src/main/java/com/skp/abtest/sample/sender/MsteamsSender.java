@@ -1,8 +1,9 @@
 package com.skp.abtest.sample.sender;
 
+import com.skp.abtest.sample.entity.Msteams;
 import com.skp.abtest.sample.entity.NotifyRequest;
 import com.skp.abtest.sample.entity.SenderResponse;
-import com.skp.abtest.sample.entity.SlackRequest;
+import com.skp.abtest.sample.entity.Slack;
 import com.skp.abtest.sample.util.JsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +24,9 @@ public class MsteamsSender {
 
     public List<SenderResponse> notify(NotifyRequest request) {
         ArrayList<SenderResponse> responseList = new ArrayList<>();
-        for (SlackRequest slackRequest: request.getSlack()) {
-            String url = buildUrl(request, slackRequest);
-            String body = buildBody(request, slackRequest);
+        for (Msteams channel : request.getMsteams()) {
+            String url = buildUrl(request, channel);
+            String body = buildBody(request, channel);
             logger.debug("<notify> msteams: url={} body={}", url, body);
             SenderResponse response = notifyInternal(request, url, body);
             responseList.add(response);
@@ -33,11 +34,11 @@ public class MsteamsSender {
         return responseList;
     }
 
-    private String buildUrl(NotifyRequest request, SlackRequest slackRequest) {
-        return String.format("%s", slackRequest.getUrl()).toString();
+    private String buildUrl(NotifyRequest request, Msteams channel) {
+        return String.format("%s", channel.getUrl()).toString();
     }
     
-    private String buildBody(NotifyRequest request, SlackRequest channel) {
+    private String buildBody(NotifyRequest request, Msteams channel) {
         return JsonHelper.getExpressionValue(request, body, "json");
     }
 

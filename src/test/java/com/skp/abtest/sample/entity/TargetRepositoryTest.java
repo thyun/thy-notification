@@ -21,12 +21,12 @@ public class TargetRepositoryTest {
     @Test
     public void testSave() throws Exception {
         Target target = new Target();
-        target.setId("aaa");
+        target.setId("default");
+        target.setPhone("01010001000 01010001001 01010001002");
 
-        WebhookUrl webhookUrl = new WebhookUrl();
-        webhookUrl.setName("slack");
-
-        target.addWebhookUrl(webhookUrl);
+        Webhook webhook = new Webhook();
+        webhook.setName("webhook01");
+        target.addWebhook(webhook);
         targetRepository.save(target);
 
         Iterable<Target> targetList = targetRepository.findAll();

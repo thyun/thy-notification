@@ -40,9 +40,9 @@
           <td th:text="${item.slack}"></td>
           <td th:text="${item.msteams}"></td>
           <td>
-            <span th:each="webhookUrl : ${item.webhookUrls}" th:text="${webhookUrl.url}">
+            <span th:each="webhook : ${item.webhookList}" th:text="${webhook.url}">
             </span>
-<!--            <span th:each="webhookUrl : ${item.webhookUrls}" th:text="${webhookUrl.name} + ' - ' + ${webhookUrl.url}" class="label label-high">
+<!--            <span th:each="webhook : ${item.webhooks}" th:text="${webhook.name} + ' - ' + ${webhook.url}" class="label label-high">
             </span> -->
           </td>
           <td>

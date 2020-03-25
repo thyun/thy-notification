@@ -36,7 +36,7 @@ public class CommonTest {
 
     @Test
     public void testGetPathValue1() throws IOException {
-        Map request = objectMapper.readValue(FileHelper.getFileFromResource("notify-request01.json"), Map.class);
+        Map request = objectMapper.readValue(FileHelper.getFileFromResource("notify-request02.json"), Map.class);
         String value = JsonHelper.getPathValue(request, "{{ .title }}", "json");
         assertEquals("제목", value);
 

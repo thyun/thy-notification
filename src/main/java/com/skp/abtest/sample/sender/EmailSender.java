@@ -22,6 +22,9 @@ public class EmailSender {
     // TODO Set from
     public List<SenderResponse> notify(NotifyRequest request) {
         ArrayList<SenderResponse> responseList = new ArrayList<>();
+        if (request.getEmail() == null || request.getEmail().size() == 0)
+            return responseList;
+
         String from = "no-reply@com";
         String[] to = buildTo(request.getEmail());
 

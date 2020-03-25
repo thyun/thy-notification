@@ -1,16 +1,17 @@
 # TODO
 1) API 기능
-- phones webhook
-- webhook url - content-type 설정?
-- Webhook url - url validation if set
-- webhook config -> webhook global
-- telegram
+- webhook from request: test
+  url validation if set, content-type 설정?
+  ConfigWebhook -> Webhook 으로 대체? webhook.use, webhook.data 사용?
+- config - application.alertmanager.title, message define?
+- target page sorting
 - 1건이라도 fail이면 NotifyResponse fail로 설정 (slack의 경우 여러 건 중 일부만 성공 가능)
 - send retry?
 - test code 추가 (LDAPTest 실패함)
 - targetId={{ ..commonLabels.team}} 으로 설정하면 NullPointer exception 발생
+- Webhook from config: test
 
-2) 추후
+# TODO Later
 - https://getbootstrap.com/docs/4.4/examples/checkout/ -> submit 하면 invalid-feedback은 어떻게 표시되나?
 - line, kakao, telegram sender?
 - docker
@@ -21,6 +22,7 @@
 - templates/users/new-user.html - form input font-size .875rem 설정이 안됨
 
 # DONE
+- phone webhook 구현
 - ui targets webhook url
   * get/post method
   * choose name시 자동 입력
@@ -60,14 +62,22 @@
 Request:
 {
     "id": "send-0001",
+    "targetId": "default",
     "title": "제목",
     "message": "[ON] SMONi-ap-dev03 [Memory used] 6685151232 > 15 [1 MIN PMon #56]",
-    "phones": [ "01039084148", "0264074148" ],
-    "emails": [ "th.yun@sk.com" ],
+    "phone": [ "01039084148", "0264074148" ],
+    "email": [ "th.yun@sk.com" ],
     "slack": [
         { "url": "https://hooks.slack.com/services/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" }
     ],
-    "webhook": [ ]
+    "msteams": [
+        { "url": "https://outlook.office.com/webhook/1f10ad42-952a-4f67-82b5-0dd15135fd89@c0e04683-773c-43be-a906-36be87292cc2/IncomingWebhook/21f9bc48490747a8aa05b350296f853a/27206cbd-4df7-424c-b060-57b7eb770d83" }
+    ],
+    "webhook": [
+        {
+            "url": ""
+        }
+    ]
 }
 
 Response:

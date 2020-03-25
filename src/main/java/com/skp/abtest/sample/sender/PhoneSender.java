@@ -24,6 +24,8 @@ public class PhoneSender {
 
     public List<SenderResponse> notify(NotifyRequest request) {
         ArrayList<SenderResponse> responseList = new ArrayList<>();
+        if (request.getPhone() == null || request.getPhone().size() == 0)
+            return responseList;
 
         SenderResponse response = notifyInternal(request);
         responseList.add(response);
@@ -48,6 +50,7 @@ public class PhoneSender {
         } catch (RuntimeException e) {
             logger.error(e.toString(), e);
             response.setResult(false);
+            response.setError(e.getMessage());
         }
         return response;
     }

@@ -2,7 +2,7 @@ package com.skp.abtest.sample.controller;
 
 import com.skp.abtest.sample.entity.Target;
 import com.skp.abtest.sample.entity.TargetRepository;
-import com.skp.abtest.sample.entity.WebhookUrl;
+import com.skp.abtest.sample.entity.Webhook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +41,8 @@ public class TargetController {
 
     @GetMapping("/new")
     public String _new(Target target) {
-        WebhookUrl webhookUrl = new WebhookUrl();
-        target.addWebhookUrl(webhookUrl);
+        Webhook webhook = new Webhook();
+        target.addWebhook(webhook);
         return "targets/new-target";
     }
 
@@ -54,6 +54,7 @@ public class TargetController {
         }
         logger.debug("create(): target=" + target.toString());
 
+        target.validate();
         targetRepository.save(target);
         return "redirect:/targets";
     }
@@ -63,6 +64,10 @@ public class TargetController {
         Target target = targetRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid target id:" + id));
         logger.debug("edit(): target=" + target.toString());
 
+        if (target.getWebhookList().size() == 0) {
+            Webhook webhook = new Webhook();
+            target.addWebhook(webhook);
+        }
         model.addAttribute("target", target);
         return "targets/edit-target";
     }
@@ -74,6 +79,7 @@ public class TargetController {
            return "targets/edit-target";
         }
 
+        target.validate();
         targetRepository.save(target);
         return "redirect:/targets";
     }

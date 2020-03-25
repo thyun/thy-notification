@@ -30,7 +30,7 @@ public class Target {
     @Valid
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "target_id")
-    private Collection<WebhookUrl> webhookUrls = new ArrayList<>();
+    private Collection<Webhook> webhookList = new ArrayList<>();
 
     public List<String> getPhoneList() {
         if (phone == null || phone.length() == 0)
@@ -45,43 +45,52 @@ public class Target {
         return Arrays.asList(email.split(" "));
     }
 
-    public List<SlackRequest> getSlackList() {
+    public List<Slack> getSlackList() {
         if (slack == null || slack.length() == 0)
             return new ArrayList<>();
 
         return Arrays.asList(slack.split(" "))
                 .stream().map((s) -> {
-                    SlackRequest request = new SlackRequest();
+                    Slack request = new Slack();
                     request.setUrl(s);
                     return request;
                 })
                 .collect(Collectors.toList());
     }
 
-    public List<MsteamsRequest> getMsteamsList() {
-        if (slack == null || slack.length() == 0)
+    public List<Msteams> getMsteamsList() {
+        if (msteams == null || msteams.length() == 0)
             return new ArrayList<>();
 
-        return Arrays.asList(slack.split(" "))
+        return Arrays.asList(msteams.split(" "))
                 .stream().map((s) -> {
-                    MsteamsRequest request = new MsteamsRequest();
+                    Msteams request = new Msteams();
                     request.setUrl(s);
                     return request;
                 })
                 .collect(Collectors.toList());
     }
 
-    public void addWebhookUrl(WebhookUrl w) {
+    public void validate() {
+        if (webhookList == null || webhookList.size() == 0)
+            webhookList = new ArrayList<>();
+        else
+            webhookList = webhookList.stream()
+                .filter(webhook -> webhook.isValid())
+                .collect(Collectors.toList());
+    }
+
+    public void addWebhook(Webhook w) {
 //        if (webhookUrls == null)
 //            webhookUrls = new ArrayList<>();
-        webhookUrls.add(w);
+        webhookList.add(w);
     }
 
     @Override
     public String toString() {
         String result = "[Target] id=" + id;
-        for (WebhookUrl webhookUrl: webhookUrls) {
-            result += "\n" + webhookUrl.toString();
+        for (Webhook webhook : webhookList) {
+            result += "\n" + webhook.toString();
         }
         return result;
     }

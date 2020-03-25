@@ -39,15 +39,16 @@ public class SenderManager {
 
         request = mergeTarget(request, target);
         logger.debug("merged request={}", request);
-        if (existPhone(request) && phoneUse)
+        if (phoneUse)
             response.setPhone(phoneSender.notify(request));
-        if (existEmail(request) && emailUse)
+        if (emailUse)
             response.setEmail(emailSender.notify(request));
-        if (existSlack(request) && slackUse)
+        if (slackUse)
             response.setSlack(slackSender.notify(request));
-        if (existMsteams(request) && msteamsUse)
+        if (msteamsUse)
             response.setMsteams(msteamsSender.notify(request));
         response.setWebhook(webhookSender.notify(request));
+//        webhookSender.notifyConfig(request);
 
         response.setId(request.getId());
         response.setResult(result);
@@ -59,6 +60,7 @@ public class SenderManager {
         request.getEmail().addAll(target.get().getEmailList());
         request.getSlack().addAll(target.get().getSlackList());
         request.getMsteams().addAll(target.get().getMsteamsList());
+        request.getWebhook().addAll(target.get().getWebhookList());
         return request;
     }
 
@@ -104,18 +106,6 @@ public class SenderManager {
         String summary = (String) map.getOrDefault("summary", "");
         return String.format("[%s:%d]\nAlert:%s\nSummary:%s", status, count, alertname, summary);
  */
-    }
-
-    private boolean existPhone(NotifyRequest request) {
-        if (request.getPhone() != null && request.getPhone().size() > 0)
-            return true;
-        return false;
-    }
-
-    private boolean existEmail(NotifyRequest request) {
-        if (request.getEmail() != null && request.getEmail().size() > 0)
-            return true;
-        return false;
     }
 
     private boolean existSlack(NotifyRequest request) {

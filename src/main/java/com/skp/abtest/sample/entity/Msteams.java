@@ -3,6 +3,6 @@ package com.skp.abtest.sample.entity;
 import lombok.Data;
 
 @Data
-public class WebhookRequest {
+public class Msteams {
     String url;
 }

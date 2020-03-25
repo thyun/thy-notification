@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
-public class WebhookUrl {
+public class Webhook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,13 +17,19 @@ public class WebhookUrl {
 
 //    @NotBlank(message = "Name is mandatory")
     private String name;
-    private String method;
     private String url;
+    private String method;
     private String body;
+    private String format = "json";
+
+    public boolean isValid() {
+        return (name != null && name.length() > 0 &&
+                url != null && url.length() > 0);
+    }
 
     @Override
     public String toString() {
-        String result = String.format("[WebhookUrl] name=%s method=%s url=%s body=%s", name, method, url, body);
+        String result = String.format("[Webhook] name=%s method=%s url=%s body=%s", name, method, url, body);
         return result;
     }
 }

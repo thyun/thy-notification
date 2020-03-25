@@ -26,3 +26,14 @@ label strong {
   vertical-align: baseline;
   border-radius: .25em;
 }
+
+.alert {
+  padding: 5px;
+  margin-bottom: 5px;
+}
+.alert>p, .alert>ul {
+  margin-bottom: 0;
+}
+
+input::placeholder {
+}
