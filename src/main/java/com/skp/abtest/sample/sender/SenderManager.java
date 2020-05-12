@@ -74,14 +74,14 @@ public class SenderManager {
     }
 
     long webhookId = 1;
-    String webhookTitle = "[Notification - AlertManager]";
+    String webhookTitle = "[thy-notification - {{ .groupLabels.alertname }}]";
     String webhookMessage = "Alert: {{ .commonLabels.alertname }}\nSummary:{{ .commonAnnotations.summary }}";   // + "RawData: {{ .CommonLabels }}";
     public NotifyResponse notifyWebhook(Map webhook) {
         NotifyRequest request = new NotifyRequest();
         request.setId(String.format("alertmanager-%d", webhookId++));
         request.setTargetId(buildTargetId(webhook, targetId));
-        request.setTitle(webhookTitle);
-        request.setMessage(buildWebhookMessage(webhook));
+        request.setTitle(buildWebhookTitle(webhookTitle, webhook));
+        request.setMessage(buildWebhookMessage(webhookMessage, webhook));
         return notify(request);
     }
 
@@ -89,23 +89,17 @@ public class SenderManager {
         return JsonHelper.getExpressionValue(webhook, targetId, "json");
     }
 
-    private String buildWebhookMessage(Map webhook) {
-        String status = (String) webhook.get("status");
-        List list = (List) webhook.get("alerts");
-        int count = list.size();
-        String message = JsonHelper.getExpressionValue(webhook, webhookMessage, "json");
-        return String.format("[%s:%d]\n%s", status, count, message);
-/*
-        String status = (String) webhook.get("status");
-        List list = (List) webhook.get("alerts");
-        int count = list.size();
+    private String buildWebhookTitle(String template, Map webhook) {
+        String value = JsonHelper.getExpressionValue(webhook, template, "json");
+        return String.format("%s", value);
+    }
 
-        Map map = (Map) webhook.get("commonLabels");
-        String alertname = (String) map.get("alertname");
-        map = (Map) webhook.get("commonAnnotations");
-        String summary = (String) map.getOrDefault("summary", "");
-        return String.format("[%s:%d]\nAlert:%s\nSummary:%s", status, count, alertname, summary);
- */
+    private String buildWebhookMessage(String template, Map webhook) {
+        String status = (String) webhook.get("status");
+        List list = (List) webhook.get("alerts");
+        int count = list.size();
+        String message = JsonHelper.getExpressionValue(webhook, template, "json");
+        return String.format("[%s:%d]\n%s", status, count, message);
     }
 
     private boolean existSlack(NotifyRequest request) {

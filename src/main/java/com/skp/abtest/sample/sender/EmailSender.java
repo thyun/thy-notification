@@ -48,6 +48,7 @@ public class EmailSender {
         } catch (RuntimeException e) {
             logger.error(e.toString());
             response.setResult(false);
+            response.setError(e.toString());
         }
         return response;
     }
