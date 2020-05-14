@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -75,7 +76,7 @@ public class SenderManager {
 
     long webhookId = 1;
     String webhookTitle = "[thy-notification - {{ .groupLabels.alertname }}]";
-    String webhookMessage = "Alert: {{ .commonLabels.alertname }}\nSummary:{{ .commonAnnotations.summary }}";   // + "RawData: {{ .CommonLabels }}";
+    String webhookMessage = "[{{ .status }}] [Alert: {{ .labels.alertname }}] {{ .startsAt }} [Summary:{{ .annotations.summary }}] {{ .labels }}";   // + "RawData: {{ .CommonLabels }}";
     public NotifyResponse notifyWebhook(Map webhook) {
         NotifyRequest request = new NotifyRequest();
         request.setId(String.format("alertmanager-%d", webhookId++));
@@ -95,11 +96,20 @@ public class SenderManager {
     }
 
     private String buildWebhookMessage(String template, Map webhook) {
-        String status = (String) webhook.get("status");
+        ArrayList alerts = (ArrayList) webhook.get("alerts");
+        StringBuffer message = new StringBuffer();
+        for (Object o : alerts) {
+            Map alert = (Map) o;
+            message.append("\n");
+            message.append(JsonHelper.getExpressionValue(alert, template, "json"));
+        }
+
+        return message.toString();
+/*        String status = (String) webhook.get("status");
         List list = (List) webhook.get("alerts");
         int count = list.size();
         String message = JsonHelper.getExpressionValue(webhook, template, "json");
-        return String.format("[%s:%d]\n%s", status, count, message);
+        return String.format("[%s:%d]\n%s", status, count, message); */
     }
 
     private boolean existSlack(NotifyRequest request) {

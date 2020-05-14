@@ -11,7 +11,6 @@ import com.skp.abtest.sample.entity.NotifyRequest;
 import com.skp.abtest.sample.entity.NotifyResponse;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/v1")
