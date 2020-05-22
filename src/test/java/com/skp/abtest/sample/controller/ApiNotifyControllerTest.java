@@ -172,18 +172,18 @@ public class ApiNotifyControllerTest {
 
 
     //////////////////////////////////////////////////////////////////////
-    // Test POST /v1/webhook
+    // Test POST /v1/alertmanager
     //////////////////////////////////////////////////////////////////////
     @Test
-    public void testWebhook() throws Exception {
+    public void testAlertmanager() throws Exception {
         // Prepare
         String targetId = "team:devops";
         Target target = makeTarget(targetId);
         given(targetRepository.findById(targetId)).willReturn(Optional.ofNullable(target));
 
-        String request =  FileHelper.getFileFromResource("webhook-request01.json");
+        String request =  FileHelper.getFileFromResource("alertmanager-request01.json");
         logger.debug("request=" + request);
-        this.mockMvc.perform(post("/v1/webhook").contentType(MediaType.APPLICATION_JSON).content(request))
+        this.mockMvc.perform(post("/v1/alertmanager").contentType(MediaType.APPLICATION_JSON).content(request))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SenderManager {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -34,11 +34,9 @@ public class SenderManager {
         boolean result = true;
 
         // Lookup notification
-        Optional<Target> target = targetRepository.findById(request.getTargetId());
-        if (!target.isPresent())
-            return makeErrorResponse(request, String.format("Target id(%s) not found", request.getTargetId()));
+        Optional<Target> target = lookupTarget(request.getTargetId());
 
-        request = mergeTarget(request, target);
+        mergeTarget(request, target);
         logger.debug("merged request={}", request);
         if (phoneUse)
             response.setPhone(phoneSender.notify(request));
@@ -56,13 +54,22 @@ public class SenderManager {
         return response;
     }
 
-    private NotifyRequest mergeTarget(NotifyRequest request, Optional<Target> target) {
-        request.getPhone().addAll(target.get().getPhoneList());
-        request.getEmail().addAll(target.get().getEmailList());
-        request.getSlack().addAll(target.get().getSlackList());
-        request.getMsteams().addAll(target.get().getMsteamsList());
-        request.getWebhook().addAll(target.get().getWebhookList());
-        return request;
+    private Optional<Target> lookupTarget(String targetId) {
+        Optional<Target> target = targetRepository.findById(targetId);
+        if (target.isPresent())
+            return target;
+        logger.debug("Target id(%s) not found. Use default", targetId);
+        return targetRepository.findById("default");
+    }
+
+    private void mergeTarget(NotifyRequest request, Optional<Target> target) {
+        if (target.isPresent()) {
+            request.getPhone().addAll(target.get().getPhoneList());
+            request.getEmail().addAll(target.get().getEmailList());
+            request.getSlack().addAll(target.get().getSlackList());
+            request.getMsteams().addAll(target.get().getMsteamsList());
+            request.getWebhook().addAll(target.get().getWebhookList());
+        }
     }
 
     private NotifyResponse makeErrorResponse(NotifyRequest request, String error) {
@@ -74,37 +81,44 @@ public class SenderManager {
         return response;
     }
 
-    long webhookId = 1;
-    String webhookTitle = "[thy-notification - {{ .groupLabels.alertname }}]";
-    String webhookMessage = "[{{ .status }}] [Alert: {{ .labels.alertname }}] {{ .startsAt }} [Summary:{{ .annotations.summary }}] {{ .labels }}";   // + "RawData: {{ .CommonLabels }}";
-    public NotifyResponse notifyWebhook(Map webhook) {
+    long alertmanagerId = 1;
+    String alertmanagerTitle = "[thy-notification - {{ .groupLabels.alertname }}]";
+    String alertmanagerMessage = "[{{ .status }}] [Alert: {{ .labels.alertname }}] {{ .startsAt }} [Summary:{{ .annotations.summary }}]";   // + "RawData: {{ .CommonLabels }}";
+//    String alertmanagerMessage = "[{{ .status }}] [Alert: {{ .labels.alertname }}] {{ .startsAt }} [Summary:{{ .annotations.summary }}] {{ .labels }}";   // + "RawData: {{ .CommonLabels }}";
+    public NotifyResponse notifyAlertmanager(Map alertmanagerWebhook) {
         NotifyRequest request = new NotifyRequest();
-        request.setId(String.format("alertmanager-%d", webhookId++));
-        request.setTargetId(buildTargetId(webhook, targetId));
-        request.setTitle(buildWebhookTitle(webhookTitle, webhook));
-        request.setMessage(buildWebhookMessage(webhookMessage, webhook));
+        request.setId(String.format("alertmanager-%d", alertmanagerId++));
+        request.setTargetId(buildTargetId(targetId, alertmanagerWebhook));
+        request.setTitle(buildAlertmanagerTitle(alertmanagerTitle, alertmanagerWebhook));
+        request.setMessage(buildAlertmanagerMessage(alertmanagerMessage, alertmanagerWebhook));
         return notify(request);
     }
 
-    private String buildTargetId(Map webhook, String targetId) {
-        return JsonHelper.getExpressionValue(webhook, targetId, "json");
+    private String buildTargetId(String template, Map alertmanagerWebhook) {
+        return JsonHelper.getExpressionValue(alertmanagerWebhook, template, "json");
     }
 
-    private String buildWebhookTitle(String template, Map webhook) {
-        String value = JsonHelper.getExpressionValue(webhook, template, "json");
+    private String buildAlertmanagerTitle(String template, Map alertmanagerWebhook) {
+        String value = JsonHelper.getExpressionValue(alertmanagerWebhook, template, "json");
         return String.format("%s", value);
     }
 
-    private String buildWebhookMessage(String template, Map webhook) {
-        ArrayList alerts = (ArrayList) webhook.get("alerts");
-        StringBuffer message = new StringBuffer();
+    private String buildAlertmanagerMessage(String template, Map alertmanagerWebhook) {
+        ArrayList<Map> alerts = (ArrayList<Map>) alertmanagerWebhook.get("alerts");
+
+        String result = alerts.stream()
+                .map(element -> JsonHelper.getExpressionValue(element, template, "json"))
+                .collect(Collectors.joining("   \n"));      // Markdown
+        return result;
+
+/*        StringBuffer message = new StringBuffer();
         for (Object o : alerts) {
             Map alert = (Map) o;
             message.append("\n");
             message.append(JsonHelper.getExpressionValue(alert, template, "json"));
         }
+        return message.toString(); */
 
-        return message.toString();
 /*        String status = (String) webhook.get("status");
         List list = (List) webhook.get("alerts");
         int count = list.size();

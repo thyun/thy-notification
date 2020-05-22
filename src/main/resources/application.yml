@@ -1,5 +1,3 @@
-server:
-  port: 8080
 logging:
   config: classpath:logback.xml
 application:
