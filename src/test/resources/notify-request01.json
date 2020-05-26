@@ -1,6 +1,6 @@
 {
     "id": "send-0001",
-    "targetId": "default",
+    "targetKey": "default",
     "title": "제목",
     "message": "[ON] web-dev01 [Memory used] 6685151232 > 15 [1 MIN thy-notification #56]"
 }

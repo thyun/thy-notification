@@ -21,7 +21,7 @@ public class TargetRepositoryTest {
     @Test
     public void testSave() throws Exception {
         Target target = new Target();
-        target.setId("default");
+        target.setKey("default");
         target.setPhone("01010001000 01010001001 01010001002");
 
         Webhook webhook = new Webhook();

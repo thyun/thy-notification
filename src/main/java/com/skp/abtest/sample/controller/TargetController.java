@@ -6,6 +6,7 @@ import com.skp.abtest.sample.entity.Webhook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,11 +30,12 @@ public class TargetController {
 
    @GetMapping("")
     public String index(Target target, Model model) {
-        model.addAttribute("items", targetRepository.findAll());
+       model.addAttribute("items", targetRepository.findAll());
+//        model.addAttribute("items", targetRepository.findAll(new Sort(Sort.Direction.ASC, "key")));
         return "targets/index";
     }
 
-    // TODO Implement notifications show
+    // TODO Implement targets show
     @GetMapping("/show")
     public String show() {
         return "targets/show-target";
@@ -60,7 +62,7 @@ public class TargetController {
     }
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") String id, Model model) {
+    public String edit(@PathVariable("id") Long id, Model model) {
         Target target = targetRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid target id:" + id));
         logger.debug("edit(): target=" + target.toString());
 
@@ -85,8 +87,8 @@ public class TargetController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") String id, Model model) {
-        Target target = targetRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid notification Id:" + id));
+    public String delete(@PathVariable("id") Long id, Model model) {
+        Target target = targetRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid target Id:" + id));
         targetRepository.delete(target);
         return "redirect:/targets";
     }

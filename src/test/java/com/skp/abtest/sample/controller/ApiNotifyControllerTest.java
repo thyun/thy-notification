@@ -56,7 +56,7 @@ public class ApiNotifyControllerTest {
     @MockBean(name="webhookSender")
     private WebhookSender webhookSender;
 
-    String targetId = "default";
+    String targetKey = "default";
     Target target;
 
     @Before
@@ -74,7 +74,7 @@ public class ApiNotifyControllerTest {
 
         // Prepare
         target.setPhone("01010001001 01010001002");
-        given(targetRepository.findById(targetId)).willReturn(Optional.ofNullable(target));
+        given(targetRepository.findByKey(targetKey)).willReturn(Optional.ofNullable(target));
         given(phoneSender.notify(any(NotifyRequest.class))).willReturn(makeSenderResponseList(request));
 
         // Perform
@@ -94,7 +94,7 @@ public class ApiNotifyControllerTest {
 
         // Prepare
         target.setEmail("aaaa@example.com bbbb@example.com");
-        given(targetRepository.findById(targetId)).willReturn(Optional.ofNullable(target));
+        given(targetRepository.findByKey(targetKey)).willReturn(Optional.ofNullable(target));
         given(emailSender.notify(any(NotifyRequest.class))).willReturn(makeSenderResponseList(request));
 
         // Perform
@@ -114,7 +114,7 @@ public class ApiNotifyControllerTest {
 
         // Prepare
         target.setSlack("https://hooks.slack.com/services/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");
-        given(targetRepository.findById(targetId)).willReturn(Optional.ofNullable(target));
+        given(targetRepository.findByKey(targetKey)).willReturn(Optional.ofNullable(target));
         given(slackSender.notify(any(NotifyRequest.class))).willReturn(makeSenderResponseList(request));
 
         // Perform
@@ -134,7 +134,7 @@ public class ApiNotifyControllerTest {
 
         // Prepare
         target.setMsteams("https://outlook.office.com/webhook/1f10ad42-952a-4f67-82b5-0dd15135fd89@c0e04683-773c-43be-a906-36be87292cc2/IncomingWebhook/21f9bc48490747a8aa05b350296f853a/27206cbd-4df7-424c-b060-57b7eb770d83");
-        given(targetRepository.findById(targetId)).willReturn(Optional.ofNullable(target));
+        given(targetRepository.findByKey(targetKey)).willReturn(Optional.ofNullable(target));
         given(msteamsSender.notify(any(NotifyRequest.class))).willReturn(makeSenderResponseList(request));
 
         // Perform
@@ -157,7 +157,7 @@ public class ApiNotifyControllerTest {
         Webhook webhook = makeWebhook();
         webhookList.add(webhook);
         target.setWebhookList(webhookList);
-        given(targetRepository.findById(targetId)).willReturn(Optional.ofNullable(target));
+        given(targetRepository.findByKey(targetKey)).willReturn(Optional.ofNullable(target));
         given(webhookSender.notify(any(NotifyRequest.class))).willReturn(makeSenderResponseList(request));
 
         // Perform
@@ -179,7 +179,7 @@ public class ApiNotifyControllerTest {
         // Prepare
         String targetId = "team:devops";
         Target target = makeTarget(targetId);
-        given(targetRepository.findById(targetId)).willReturn(Optional.ofNullable(target));
+        given(targetRepository.findByKey(targetId)).willReturn(Optional.ofNullable(target));
 
         String request =  FileHelper.getFileFromResource("alertmanager-request01.json");
         logger.debug("request=" + request);
@@ -188,9 +188,9 @@ public class ApiNotifyControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private Target makeTarget(String targetId) {
+    private Target makeTarget(String targetKey) {
         Target target = new Target();
-        target.setId(targetId);
+        target.setKey(targetKey);
         return target;
     }
 

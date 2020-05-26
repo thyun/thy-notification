@@ -12,8 +12,11 @@ import java.util.stream.Collectors;
 @Data
 public class Target {
     @Id
-    @NotBlank(message = "ID is mandatory")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @NotBlank(message = "Key is mandatory")
+    private String key;
 
     @Column(length = 1024)
     private String phone;

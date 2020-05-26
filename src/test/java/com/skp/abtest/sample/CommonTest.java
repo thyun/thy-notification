@@ -50,7 +50,7 @@ public class CommonTest {
 
     @Test
     public void testGetPathValue2() throws IOException {
-        Map request = objectMapper.readValue(FileHelper.getFileFromResource("webhook-request01.json"), Map.class);
+        Map request = objectMapper.readValue(FileHelper.getFileFromResource("alertmanager-request01.json"), Map.class);
         String value = JsonHelper.getPathValue(request, "{{ .commonLabels.alertname }}", "json");
         assertEquals("High Memory Usage of Container", value);
 
@@ -60,7 +60,7 @@ public class CommonTest {
 
     @Test
     public void testGetExpressionValue() throws IOException {
-        Map request = objectMapper.readValue(FileHelper.getFileFromResource("webhook-request01.json"), Map.class);
+        Map request = objectMapper.readValue(FileHelper.getFileFromResource("alertmanager-request01.json"), Map.class);
         String exp = "Alert: {{ .commonLabels.alertname }}. Summary: {{ .commonAnnotations.summary }}";
         String value = JsonHelper.getExpressionValue(request, exp, "json");
         assertEquals("Alert: High Memory Usage of Container. Summary: Container named  in  in default is using more than 75% of Memory Limit", value);

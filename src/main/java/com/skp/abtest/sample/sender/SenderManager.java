@@ -16,7 +16,7 @@ public class SenderManager {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired TargetRepository targetRepository;
-    @Value("${application.alertmanager.targetId}") String targetId;
+    @Value("${application.alertmanager.targetKey}") String targetKey;
     @Value("${application.phone.use}") boolean phoneUse;
     @Value("${application.email.use}") boolean emailUse;
     @Value("${application.slack.use}") boolean slackUse;
@@ -34,7 +34,7 @@ public class SenderManager {
         boolean result = true;
 
         // Lookup notification
-        Optional<Target> target = lookupTarget(request.getTargetId());
+        Optional<Target> target = lookupTarget(request.getTargetKey());
 
         mergeTarget(request, target);
         logger.debug("merged request={}", request);
@@ -55,11 +55,11 @@ public class SenderManager {
     }
 
     private Optional<Target> lookupTarget(String targetId) {
-        Optional<Target> target = targetRepository.findById(targetId);
+        Optional<Target> target = targetRepository.findByKey(targetId);
         if (target.isPresent())
             return target;
         logger.debug("Target id(%s) not found. Use default", targetId);
-        return targetRepository.findById("default");
+        return targetRepository.findByKey("default");
     }
 
     private void mergeTarget(NotifyRequest request, Optional<Target> target) {
@@ -88,13 +88,13 @@ public class SenderManager {
     public NotifyResponse notifyAlertmanager(Map alertmanagerWebhook) {
         NotifyRequest request = new NotifyRequest();
         request.setId(String.format("alertmanager-%d", alertmanagerId++));
-        request.setTargetId(buildTargetId(targetId, alertmanagerWebhook));
+        request.setTargetKey(buildTargetKey(targetKey, alertmanagerWebhook));
         request.setTitle(buildAlertmanagerTitle(alertmanagerTitle, alertmanagerWebhook));
         request.setMessage(buildAlertmanagerMessage(alertmanagerMessage, alertmanagerWebhook));
         return notify(request);
     }
 
-    private String buildTargetId(String template, Map alertmanagerWebhook) {
+    private String buildTargetKey(String template, Map alertmanagerWebhook) {
         return JsonHelper.getExpressionValue(alertmanagerWebhook, template, "json");
     }
 

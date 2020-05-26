@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class NotifyRequest {
     String id;
-    String targetId;
+    String targetKey;
     String title;
     String message;
     List<String> phone = new ArrayList<>();

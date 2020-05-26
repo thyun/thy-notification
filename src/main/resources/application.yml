@@ -2,7 +2,7 @@ logging:
   config: classpath:logback.xml
 application:
   alertmanager:
-    targetId: team:{{ .commonLabels.team }}
+    targetKey: team:{{ .commonLabels.team }}
     title: ''
     message: ''
   phone:
