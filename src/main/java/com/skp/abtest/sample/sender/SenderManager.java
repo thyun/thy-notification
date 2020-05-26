@@ -83,8 +83,7 @@ public class SenderManager {
 
     long alertmanagerId = 1;
     String alertmanagerTitle = "[thy-notification - {{ .groupLabels.alertname }}]";
-    String alertmanagerMessage = "[{{ .status }}] [Alert: {{ .labels.alertname }}] {{ .startsAt }} [Summary:{{ .annotations.summary }}]";   // + "RawData: {{ .CommonLabels }}";
-//    String alertmanagerMessage = "[{{ .status }}] [Alert: {{ .labels.alertname }}] {{ .startsAt }} [Summary:{{ .annotations.summary }}] {{ .labels }}";   // + "RawData: {{ .CommonLabels }}";
+    String alertmanagerMessage = "[{{ .status }}] [Alert: {{ .labels.alertname }}] {{ .startsAt }} [Summary:{{ .annotations.summary }}] {{ .labels }}";
     public NotifyResponse notifyAlertmanager(Map alertmanagerWebhook) {
         NotifyRequest request = new NotifyRequest();
         request.setId(String.format("alertmanager-%d", alertmanagerId++));

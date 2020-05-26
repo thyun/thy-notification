@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skp.abtest.sample.entity.Target;
 import com.skp.abtest.sample.util.FileHelper;
 import com.skp.abtest.sample.util.JsonHelper;
+import org.json.simple.JSONObject;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,15 @@ public class CommonTest {
         String exp = "Alert: {{ .commonLabels.alertname }}. Summary: {{ .commonAnnotations.summary }}";
         String value = JsonHelper.getExpressionValue(request, exp, "json");
         assertEquals("Alert: High Memory Usage of Container. Summary: Container named  in  in default is using more than 75% of Memory Limit", value);
+    }
+
+    @Test
+    public void testJsonValue() throws IOException {
+        JSONObject jo = new JSONObject();
+        Map request = objectMapper.readValue(FileHelper.getFileFromResource("alertmanager-request01.json"), Map.class);
+        List<Map> alerts = (ArrayList<Map>) request.get("alerts");
+        Map alert = alerts.get(0);
+        logger.debug("labels=" + JsonHelper.getPathValue(alert, "{{ .labels }}", "json"));
     }
 
 

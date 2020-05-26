@@ -83,12 +83,16 @@ public class JsonHelper {
 	}
 
     public static String writeValue(Object object) {
-		try {
-			return objectMapper.writeValueAsString(object);
-		} catch (JsonProcessingException e) {
-			logger.error(e.toString());
-		}
-		return "{ }";
+		// Output example: {alertname=High Memory Usage of Container, container_name=broker, namespace=default, pod_name=kafka-0, team=devops}
+		return object.toString();
+
+		// Output example: {"alertname":"High Memory Usage of Container","container_name":"broker","namespace":"default","pod_name":"kafka-0","team":"devops"}
+//		try {
+//			return objectMapper.writeValueAsString(object);
+//		} catch (JsonProcessingException e) {
+//			logger.error(e.toString());
+//		}
+//		return "{ }";
 	}
 
 	public static Map readValue(String value) {
