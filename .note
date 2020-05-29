@@ -1,5 +1,6 @@
 # TODO
-- pkg rename
+- test 수행하면 db에 default key 들어가 있음
+- config - msteams.body, slack.body redefine
 - ui - target url validation if set
 - ui - target pagination, search
 - config - application.alertmanager.title, message define?

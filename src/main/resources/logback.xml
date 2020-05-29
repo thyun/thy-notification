@@ -28,12 +28,7 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 	
-	<logger name="com.skp.abtest.sample" level="debug" additivity="false">
-<!-- 		<appender-ref ref="FILE" /> -->
-		<appender-ref ref="STDOUT" />
-	</logger>
-	
-	<logger name="com.abtest.was" level="debug" additivity="false">
+	<logger name="com.thy" level="debug" additivity="false">
 <!-- 		<appender-ref ref="FILE" /> -->
 		<appender-ref ref="STDOUT" />
 	</logger>
