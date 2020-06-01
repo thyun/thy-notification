@@ -19,7 +19,7 @@ import java.net.URL;
 public class HttpTransport {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static int TIMEOUT_MILLIS = 3000;
+    private static int TIMEOUT_MILLIS = 5000;
     SimpleClientHttpRequestFactory requestFactory;
     private RestTemplate restTemplate;
 

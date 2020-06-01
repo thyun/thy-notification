@@ -49,6 +49,7 @@ public class TargetController {
 
     @PostMapping("/create")
     public String create(@Valid Target target, BindingResult result, Model model) {
+
         if (result.hasErrors()) {
             logger.error(result.toString());
             return "targets/new-target";

@@ -1,5 +1,7 @@
 package com.thy.notification.entity;
 
+import com.thy.notification.validation.Unique;
+import com.thy.notification.validation.UrlOrNull;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,6 +18,8 @@ public class Target {
     private long id;
 
     @NotBlank(message = "Key is mandatory")
+    @Unique(entity = Target.class, fieldName = "key", message = "Key is duplicate")
+    @Column(unique=true)    // Just add unique constraint to DB column
     private String key;
 
     @Column(length = 1024)
@@ -24,9 +28,11 @@ public class Target {
     @Column(length = 1024)
     private String email;
 
+    @UrlOrNull
     @Column(length = 1024)
     private String slack;
 
+    @UrlOrNull
     @Column(length = 1024)
     private String msteams;
 

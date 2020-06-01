@@ -20,10 +20,8 @@ application:
     password: zgtgfteyivkzrsdf
   slack:
     use: true
-    body: '{ "text": "{{ .title }}\n{{ .message }}" }'
   msteams:
     use: true
-    body: '{ "@context":"https://schema.org/extensions", "@type":"MessageCard", "themeColor":"0072C6", "title":"{{ .title }}", "text":"{{ .message }}" }'
   webhook:
   proxy:
     use: false

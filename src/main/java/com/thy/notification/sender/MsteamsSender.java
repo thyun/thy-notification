@@ -14,7 +14,8 @@ import java.util.List;
 public class MsteamsSender {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${application.msteams.body}") String body;
+    // body: '{ "@context":"https://schema.org/extensions", "@type":"MessageCard", "themeColor":"0072C6", "title":"{{ .title }}", "text":"{{ .message }}" }'
+    // @Value("${application.msteams.body}") String body;
 
     HttpTransport httpTransport;
     public MsteamsSender(HttpTransport httpTransport) {

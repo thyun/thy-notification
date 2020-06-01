@@ -14,7 +14,8 @@ import java.util.List;
 public class SlackSender {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${application.slack.body}") String body;
+    // body: '{ "text": "{{ .title }}\n{{ .message }}" }'
+    // @Value("${application.slack.body}") String body;
 
     HttpTransport httpTransport;
     public SlackSender(HttpTransport httpTransport) {
@@ -38,7 +39,10 @@ public class SlackSender {
     }
     
     private String buildBody(NotifyRequest request, Slack channel) {
-        return JsonHelper.getExpressionValue(request, body, "json");
+        SlackBody body = new SlackBody();
+        body.setText(JsonHelper.getExpressionValue(request, "{{ .title }}   \\n{{ .message }}", "json"));
+        return JsonHelper.writeValue(body);
+//        return JsonHelper.getExpressionValue(request, body, "json");
 //        return String.format("{ \"text\": \"%s\" }", buildTitleAndMessage(request.getTitle(), request.getMessage()));
     }
 

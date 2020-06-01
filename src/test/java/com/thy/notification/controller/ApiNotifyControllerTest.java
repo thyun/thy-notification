@@ -56,12 +56,12 @@ public class ApiNotifyControllerTest {
     @MockBean(name="webhookSender")
     private WebhookSender webhookSender;
 
-    String targetKey = "default";
+    String targetKey = "test";
     Target target;
 
     @Before
     public void init() {
-        target = makeTarget("default");
+        target = makeTarget(targetKey);
     }
 
     //////////////////////////////////////////////////////////////////////
