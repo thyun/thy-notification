@@ -18,7 +18,7 @@ public class Target {
     private long id;
 
     @NotBlank(message = "Key is mandatory")
-    @Unique(entity = Target.class, fieldName = "key", message = "Key is duplicate")
+//    @Unique(entity = Target.class, fieldName = "key", message = "Key is duplicate")
     @Column(unique=true)    // Just add unique constraint to DB column
     private String key;
 

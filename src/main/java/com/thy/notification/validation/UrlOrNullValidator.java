@@ -1,10 +1,12 @@
 package com.thy.notification.validation;
 
+import com.thy.notification.entity.TargetRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class UrlOrNullValidator implements ConstraintValidator<UrlOrNull, String> {
-
     @Override
     public void initialize(UrlOrNull contactNumber) {
     }

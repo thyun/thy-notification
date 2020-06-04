@@ -1,14 +1,14 @@
 buildscript {
 	ext {
-		springBootVersion = '2.0.0.RELEASE'
+		springBootVersion = '2.2.4.RELEASE'
 		mybatisSpringStarterVersion = '1.3.2'
-		spockVersion = '1.1-groovy-2.4'
+//		spockVersion = '1.1-groovy-2.4'
 	}
 	repositories {
 		mavenLocal()
-		maven { url "http://nexus.skplanet.com/repository/maven-public/" }				// 신규 사내 public - jcenter() 대신 사용
+//		maven { url "http://nexus.skplanet.com/repository/maven-public/" }				// 신규 사내 public - jcenter() 대신 사용
 		maven { url "https://plugins.gradle.org/m2/" }
-//	mavenCentral()
+		mavenCentral()
 	}
 	dependencies {
 		classpath group: 'io.spring.gradle', name: 'dependency-management-plugin', version: '1.0.3.RELEASE'
@@ -18,17 +18,17 @@ buildscript {
 	}
 }
 
-plugins {
-	id 'org.springframework.boot' version '2.1.7.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-	id 'java'
-	id 'eclipse'
-}
+//plugins {
+//	id 'org.springframework.boot' version '2.1.7.RELEASE'
+//	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+//	id 'java'
+//	id 'eclipse'
+//}
 apply plugin: 'com.palantir.docker'
-//apply plugin: 'java'
-//apply plugin: 'eclipse'
-//apply plugin: 'org.springframework.boot'
-//apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 group = 'dev.pcr.kr/plab'
 //version = '0.0.1'

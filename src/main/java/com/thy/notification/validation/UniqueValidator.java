@@ -8,11 +8,16 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Optional;
 
+/*
+ * Do not used this validator - @Autowired does not work
+ */
 public class UniqueValidator implements ConstraintValidator<Unique, Object> {
-   @Autowired private TargetRepository targetRepository;
+   @Autowired
+   private TargetRepository targetRepository;
 
    private Class clazz;
    private String fieldName;
+
    public void initialize(Unique constraint) {
       this.clazz = constraint.entity();
       this.fieldName = constraint.fieldName();
@@ -20,6 +25,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, Object> {
 
    public boolean isValid(Object obj, ConstraintValidatorContext context) {
       if (clazz.getName().equals(Target.class.getName()) && fieldName.equals("key")) {
+ //        targetRepository = (TargetRepository) applicationContext.getBean("targetRepository");
          Optional<Target> target = targetRepository.findByKey(obj.toString());
          if (target.isPresent())
             return false;

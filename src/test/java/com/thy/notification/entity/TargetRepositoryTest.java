@@ -19,7 +19,7 @@ public class TargetRepositoryTest {
     @Autowired
     private TargetRepository targetRepository;
 
-    @Ignore
+//    @Ignore
     @Test
     public void testSave() throws Exception {
         Target target = new Target();

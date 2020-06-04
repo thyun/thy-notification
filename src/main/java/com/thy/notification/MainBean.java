@@ -1,9 +1,15 @@
 package com.thy.notification;
 
 import com.thy.notification.sender.*;
+import org.hibernate.validator.HibernateValidator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+
+import javax.validation.Validator;
 
 @Configuration
 public class MainBean {
@@ -48,4 +54,22 @@ public class MainBean {
         httpTransport.setProxy(proxyUse, proxyUrl);
         return httpTransport;
     }
+
+    @Bean
+    public LocalValidatorFactoryBean validator() {
+        return new org.springframework.validation.beanvalidation.LocalValidatorFactoryBean();
+    }
+
+/*    @Bean
+    public Validator validator () {
+        return new LocalValidatorFactoryBean();
+    }
+
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        MethodValidationPostProcessor methodValidationPostProcessor = new MethodValidationPostProcessor();
+        methodValidationPostProcessor.setValidator(validator());
+        return methodValidationPostProcessor;
+    } */
+
 }

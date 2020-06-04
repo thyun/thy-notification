@@ -3,16 +3,15 @@ package com.thy.notification.controller;
 import com.thy.notification.entity.Target;
 import com.thy.notification.entity.TargetRepository;
 import com.thy.notification.entity.Webhook;
+import com.thy.notification.validation.TargetValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -25,6 +24,11 @@ public class TargetController {
     @Autowired
     public TargetController(TargetRepository targetRepository) {
         this.targetRepository = targetRepository;
+    }
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(new TargetValidator(targetRepository));
     }
 
    @GetMapping("")
