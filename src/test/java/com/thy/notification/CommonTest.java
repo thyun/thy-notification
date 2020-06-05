@@ -20,6 +20,11 @@ public class CommonTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
+    public void testLogger() {
+        logger.debug("key={}", "key01");
+    }
+
+    @Test
     public void testNotification() {
         Target n = new Target();
         n.setPhone("01010001000 01010001001");
@@ -53,8 +58,12 @@ public class CommonTest {
     @Test
     public void testGetPathValue2() throws IOException {
         Map request = objectMapper.readValue(FileHelper.getFileFromResource("alertmanager-request01.json"), Map.class);
-        String value = JsonHelper.getPathValue(request, "{{ .commonLabels.alertname }}", "json");
-        assertEquals("High Memory Usage of Container", value);
+        String value = JsonHelper.getPathValue(request, "{{ .commonLabels.team }}", "json");
+        assertEquals("devops", value);
+        value = JsonHelper.getExpressionValue(request, "team:{{ .commonLabels.team }}", "json");
+        assertEquals("team:devops", value);
+        value = JsonHelper.getExpressionValue(request, "team:{{.commonLabels.team}}", "json");
+        assertEquals("team:devops", value);
 
 //        value = JsonHelper.getPathValue(request, "default");
 //        assertEquals("default", value);

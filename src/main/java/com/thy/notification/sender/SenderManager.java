@@ -57,11 +57,11 @@ public class SenderManager {
         return response;
     }
 
-    private Optional<Target> lookupTarget(String targetId) {
-        Optional<Target> target = targetRepository.findByKey(targetId);
+    private Optional<Target> lookupTarget(String targetKey) {
+        Optional<Target> target = targetRepository.findByKey(targetKey);
         if (target.isPresent())
             return target;
-        logger.debug("Target id(%s) not found. Use default", targetId);
+        logger.debug("Target key({}) not found. Use default", targetKey);
         return targetRepository.findByKey("default");
     }
 

@@ -21,7 +21,7 @@ public class UrlOrNullValidator implements ConstraintValidator<UrlOrNull, String
 
     public boolean isUrl(String url) {
         try {
-            (new java.net.URL(url)).openStream().close();
+            (new java.net.URL(url)).toURI();
             return true;
         } catch (Exception ex) { }
         return false;

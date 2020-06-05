@@ -22,7 +22,7 @@ public class JsonHelper {
 		return getExpressionValue(map, exp, format);
 	}
 
-	static String REGEX = "\\{\\{ (.*?) \\}\\}";
+	static String REGEX = "\\{\\{\\s*(.*?)\\s*\\}\\}";
 	public static String getExpressionValue(Map map, String exp, String format) {
 		Pattern p = Pattern.compile(REGEX);
 		Matcher m = p.matcher(exp);

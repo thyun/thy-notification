@@ -80,7 +80,7 @@ public class Target {
                 .collect(Collectors.toList());
     }
 
-    public void validate() {
+    public void trim() {
         if (webhookList == null || webhookList.size() == 0)
             webhookList = new ArrayList<>();
         else

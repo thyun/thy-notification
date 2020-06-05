@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,16 +19,18 @@ import javax.validation.Valid;
 public class TargetController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final TargetRepository targetRepository;
+    private TargetValidator targetValidator;
 
     @Autowired
     public TargetController(TargetRepository targetRepository) {
         this.targetRepository = targetRepository;
+        this.targetValidator = new TargetValidator(targetRepository);
     }
 
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        binder.setValidator(new TargetValidator(targetRepository));
-    }
+//    @InitBinder
+//    protected void initBinder(WebDataBinder binder) {
+//        binder.setValidator(new TargetValidator(targetRepository));
+//    }
 
    @GetMapping("")
     public String index(Target target, Model model) {
@@ -53,14 +54,14 @@ public class TargetController {
 
     @PostMapping("/create")
     public String create(@Valid Target target, BindingResult result, Model model) {
-
+        targetValidator.validate(target, result);
         if (result.hasErrors()) {
             logger.error(result.toString());
             return "targets/new-target";
         }
         logger.debug("create(): target=" + target.toString());
 
-        target.validate();
+        target.trim();
         targetRepository.save(target);
         return "redirect:/targets";
     }
@@ -85,7 +86,7 @@ public class TargetController {
            return "targets/edit-target";
         }
 
-        target.validate();
+        target.trim();
         targetRepository.save(target);
         return "redirect:/targets";
     }
