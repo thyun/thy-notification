@@ -22,7 +22,6 @@ application:
     use: true
   msteams:
     use: true
-  webhook:
   proxy:
     use: false
     url: http://172.22.134.22

@@ -3,26 +3,32 @@ package com.thy.notification.controller;
 import com.thy.notification.entity.Target;
 import com.thy.notification.entity.TargetRepository;
 import com.thy.notification.entity.Webhook;
+import com.thy.notification.service.TargetService;
 import com.thy.notification.validation.TargetValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/targets")
 public class TargetController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final TargetService targetService;
     private final TargetRepository targetRepository;
     private TargetValidator targetValidator;
 
     @Autowired
-    public TargetController(TargetRepository targetRepository) {
+    public TargetController(TargetService targetService, TargetRepository targetRepository) {
+        this.targetService = targetService;
         this.targetRepository = targetRepository;
         this.targetValidator = new TargetValidator(targetRepository);
     }
@@ -33,8 +39,18 @@ public class TargetController {
 //    }
 
    @GetMapping("")
-    public String index(Target target, Model model) {
-       model.addAttribute("items", targetRepository.findAll());
+    public String index(Model model,
+        @RequestParam(defaultValue = "") String search,
+        @RequestParam(defaultValue = "0") Integer page,
+        @RequestParam(defaultValue = "10") Integer size,
+        @RequestParam(defaultValue = "key") String sort) {
+        Page<Target> pagination = targetService.findByKeyStartsWith(search, page, size, sort);
+        Pageable pageable = pagination.nextPageable();
+        model.addAttribute("pagination", pagination);
+        if (pagination.hasContent()) {
+            model.addAttribute("items", pagination.getContent());
+        } else
+            model.addAttribute("items", new ArrayList<Target>());
 //        model.addAttribute("items", targetRepository.findAll(new Sort(Sort.Direction.ASC, "key")));
         return "targets/index";
     }
