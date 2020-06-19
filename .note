@@ -2,20 +2,21 @@
 - config - application.alertmanager.title & message define? message생성시 annotations.summary 사용이 hard-coding되어 있는 것 같음. -> config로 빼야 될 듯
 - api - 1건이라도 fail이면 NotifyResponse fail로 설정 (slack의 경우 여러 건 중 일부만 성공 가능)
 - api - send retry, retry 2회?
+- api - request processing status
 - ui - target webhook 설정시 content-type 설정 추가?
 - test - pmon dev에서 slack/msteams/webhook proxy test
 - test - plab 상용에서 email no authentication test
 
 # TODO Later
-- https://getbootstrap.com/docs/4.4/examples/checkout/ -> submit 하면 invalid-feedback은 어떻게 표시되나?
 - line, kakao, telegram sender?
 - message에 generatorURL link 추가 기능
-- /v1/notify status, stats? today notification count. notification counts by day
 - send by async
 - send defferred result?
 - templates/users/new-user.html - form input font-size .875rem 설정이 안됨
+- notify request stats? today notification count. notification counts by day
 
 # DONE
+- form valication - https://getbootstrap.com/docs/4.4/examples/checkout/ https://www.w3schools.com/bootstrap4/bootstrap_forms.asp
 - config - webhook from config 삭제 (필요하다면 target 정보 설정하여 활용 -> key=global 값으로 target 생성)
 - ui - target pagination, search (https://www.baeldung.com/spring-data-jpa-query)
 - config - Fix team:{{ .commonLabels.team}} lookup fail
