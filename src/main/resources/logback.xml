@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
+	<property name="LOG_LEVEL" value="${log.level:-DEBUG}" />
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 	    <layout class="ch.qos.logback.classic.PatternLayout">
@@ -23,17 +24,17 @@
 	</appender> 
 -->
 
-	<root level="info">
+	<root level="${LOG_LEVEL}">
 <!-- 		<appender-ref ref="FILE" /> -->
 		<appender-ref ref="STDOUT" />
 	</root>
 	
-	<logger name="com.thy" level="debug" additivity="false">
+	<logger name="com.thy" level="${LOG_LEVEL}" additivity="false">
 <!-- 		<appender-ref ref="FILE" /> -->
 		<appender-ref ref="STDOUT" />
 	</logger>
 	
-	<logger name="org.springframework" level="debug" additivity="false">
+	<logger name="org.springframework" level="${LOG_LEVEL}" additivity="false">
 <!-- 		<appender-ref ref="FILE" /> -->
 		<appender-ref ref="STDOUT" />
 	</logger>

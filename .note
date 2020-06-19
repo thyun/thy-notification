@@ -1,5 +1,4 @@
 # TODO
-- config - application.alertmanager.title & message define? message생성시 annotations.summary 사용이 hard-coding되어 있는 것 같음. -> config로 빼야 될 듯
 - api - 1건이라도 fail이면 NotifyResponse fail로 설정 (slack의 경우 여러 건 중 일부만 성공 가능)
 - api - send retry, retry 2회?
 - api - request processing status
@@ -16,6 +15,7 @@
 - notify request stats? today notification count. notification counts by day
 
 # DONE
+- config - application.alertmanager.title & message define? message생성시 annotations.summary 사용이 hard-coding되어 있는 것 같음. -> config로 빼야 될 듯
 - form valication - https://getbootstrap.com/docs/4.4/examples/checkout/ https://www.w3schools.com/bootstrap4/bootstrap_forms.asp
 - config - webhook from config 삭제 (필요하다면 target 정보 설정하여 활용 -> key=global 값으로 target 생성)
 - ui - target pagination, search (https://www.baeldung.com/spring-data-jpa-query)

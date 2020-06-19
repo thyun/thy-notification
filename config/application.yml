@@ -1,2 +1,29 @@
 server:
   port: 8080
+logging:
+  config: classpath:logback.xml
+application:
+  alertmanager:
+    title: '[thy-notification - {{ .groupLabels.alertname }}]'
+    message: '[{{ .status }}] [Alert: {{ .labels.alertname }}] {{ .startsAt }} [Summary:{{ .annotations.summary }}] {{ .labels }}'
+    targetKey: team:{{ .commonLabels.team }}
+  phone:
+    use: true
+    url: http://localhost:9000/send?phoneNum={{ .phone }}&msg={{ .message }}&callbackNum=01050078766
+    method: GET
+    body: ''
+    format: delimiter
+  email:
+    use: true
+    host: smtp.gmail.com
+    port: 587
+    auth: true
+    username: abcd@gmail.com
+    password: zgtgfteyivkzrsdf
+  slack:
+    use: true
+  msteams:
+    use: true
+  proxy:
+    use: false
+    url: http://172.22.134.22

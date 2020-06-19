@@ -20,6 +20,8 @@ public class SenderManager {
 
     @Autowired
     TargetRepository targetRepository;
+    @Value("${application.alertmanager.title}") String alertmanagerTitle;
+    @Value("${application.alertmanager.message}") String alertmanagerMessage;
     @Value("${application.alertmanager.targetKey}") String targetKey;
     @Value("${application.phone.use}") boolean phoneUse;
     @Value("${application.email.use}") boolean emailUse;
@@ -85,8 +87,6 @@ public class SenderManager {
     }
 
     long alertmanagerId = 1;
-    String alertmanagerTitle = "[thy-notification - {{ .groupLabels.alertname }}]";
-    String alertmanagerMessage = "[{{ .status }}] [Alert: {{ .labels.alertname }}] {{ .startsAt }} [Summary:{{ .annotations.summary }}] {{ .labels }}";
     public NotifyResponse notifyAlertmanager(Map alertmanagerWebhook) {
         NotifyRequest request = new NotifyRequest();
         request.setId(String.format("alertmanager-%d", alertmanagerId++));
